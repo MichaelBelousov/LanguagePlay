@@ -1,6 +1,8 @@
 
 
-```Python
+no language really matches this of course, I'll need to come up with my own
+colorcoding
+```C
 
 //type coercion and domains? e.g. overlapping and specializing domains?
 //e.g. number domain with int specialization
