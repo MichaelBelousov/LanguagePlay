@@ -1,7 +1,8 @@
 
 
 no language really matches this of course, I'll need to come up with my own
-colorcoding
+color coding. Unless github has some way to submit languages for markdown
+parsing.
 ```C
 
 //type coercion and domains? e.g. overlapping and specializing domains?
