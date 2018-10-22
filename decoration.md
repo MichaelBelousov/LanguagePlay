@@ -1,7 +1,6 @@
-
-
 no language really matches this of course, I'll need to come up with my own
 color coding. Unless github has some way to submit languages for markdown
+
 parsing.
 ```C
 
@@ -55,8 +54,8 @@ struct Vec3D
     z: float32
     op unpack (target: Vec3D)  //return value is deducible: tuple(float32, float32, float32)
         return x, y, z
-    op geq (lhs: Vec3D, rhs: number)
-        return Vec.size() >= number
+    op gteq (lhs: Vec3D, rhs: number)
+        return lhs.size() >= rhs
     meth size(this: Vec3D)  //this parameter type must be type of outer construct
         // get the size of the 
         return math.sqrt(sum(...v**2))
@@ -152,8 +151,19 @@ class Example \ is ExampleParent
     pass
     //need a null expression?
 
-if entrypoint
-    blah
+if _entry
+    blah // equivalent to Python __name__ == '__main__' idiom
+
+@Ops.reflexive
+op add (A: Matrix, B: ptr<Matrix>)
+    for row_a, row_b in a, b.get()  //returns an object of ptrs
+        for a, b in row_a, row_b
+            b.set(b.get() + a)
+            b *+= a?
+    %`
+    //bytecode literal?
+    mov
+    `%
+    return B
     
 ```
-
