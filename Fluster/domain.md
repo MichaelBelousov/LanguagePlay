@@ -1,7 +1,7 @@
 
 type domains with conversion trees and promotion?
 
-```C
+```TypeScript
 domain Number
     int8, uint8 >
     int16, uint16 >

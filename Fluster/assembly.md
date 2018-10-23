@@ -3,7 +3,7 @@
 
 ### inline intermediate code
 
-```C
+```TypeScript
 
 assembly mylabel
     mov $1, $2

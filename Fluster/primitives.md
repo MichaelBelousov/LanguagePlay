@@ -3,7 +3,7 @@
 
 ### Integers
 
-```C
+```TypeScript
 int  //alias for int32
 int8
 uint8
@@ -18,7 +18,7 @@ Integer  //unbounded nonprimitive length integer
 
 ### Floating-Point Numbers
 
-```C
+```TypeScript
 float  //alias for float32
 float32
 float64
@@ -53,13 +53,13 @@ Hexadecimal, octal, and binary literals are not interpretted as integers.
 The type of any of those literals is a byte array with inferred-minimum
 length of the literal content.
 
-```C
+```TypeScript
 bar5: byte[] = 0x00ff
 ```
 
 A byte pack is equivalent to a byte array
 
-```C
+```TypeScript
 0x0, 0x5, 0xaaff == 0x0005aaff
 ```
 

@@ -14,7 +14,7 @@ types (functions can too but their signature is part of their name due to overlo
 A declaration of the same name to an existing name will
 overwrite the previous 
 
-```C
+```TypeScript
 func foo(a: int32, b: float32): float32
     return b^^a
 

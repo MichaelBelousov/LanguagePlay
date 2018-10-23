@@ -3,7 +3,7 @@
 
 ### Lists
 
-```C
+```TypeScript
 mylist: List = []
 //List<int32, String>
 mylist: List = [1, "heterogeneous"]
@@ -11,7 +11,7 @@ mylist: List = [1, "heterogeneous"]
 
 ### Arrays
 
-```C
+```TypeScript
 myarr: Array<int32> = a[]
 myarr2: int[] = a[]
 ```
@@ -25,13 +25,13 @@ myarr2: int[] = a[]
 
 use for uniqueness and sub/superset operations
 
-```C
+```TypeScript
 myset: Set = {1,2,3}
 ```
 
 ### Mappings (Maps)
 
-```C
+```TypeScript
 mymap: Map = {}
 //type is deduced to be per name
 mymap2: Map = {
@@ -44,7 +44,7 @@ mymap2: Map = {
 ### Structures/Objects
 
 raw structure/object literal:
-```C
+```TypeScript
 {
     foo='bar',
     foobar='buzz',
@@ -56,7 +56,7 @@ raw structure/object literal:
 
 source string literals are unindented during parsing
 
-```C
+```TypeScript
 mystr: String = "hello"
 
 mystr: String = "goodbye
@@ -65,7 +65,7 @@ mystr: String = "goodbye
 
 'raw' string literals preserve whitespace
 
-```C
+```TypeScript
 mystr: String = `hello`
 mystr: String = `goodbye
                  my dear friend`
@@ -76,6 +76,6 @@ mystr: String = `goodbye
 some types' pack operations return arrays
 e.g. bytes
 
-```C
+```TypeScript
 0x0, 0xff, 0xa4, 0xc == a[0x0, 0xff, 0xa4, 0xc] == 0x00ffa40c
 ```
