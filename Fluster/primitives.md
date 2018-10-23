@@ -90,11 +90,12 @@ the size of the array.
 ```TypeScript
 i1 = 0x00020005: int32
 i2: int64 = 0xffffffff
+i3: int8 = 0b11011011  //signed negative two's complement integer
 
 func factorial(n: int): int
     return n ? n * factorial(--n) : 1
 
-i3 = factorial(0x14: int32)  //cast byte array to int32
+n = factorial(0x14: int32)  //cast byte array to int32
 
 struct Vec2D
     x: float32

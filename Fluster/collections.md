@@ -16,6 +16,11 @@ myarr: Array<int32> = a[]
 myarr2: int[] = a[]
 ```
 
+### Packs
+
+```TypeScript
+```
+
 ### Sets
 
 use for uniqueness and sub/superset operations
