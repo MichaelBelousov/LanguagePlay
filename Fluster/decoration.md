@@ -194,6 +194,9 @@ int128<-5 //reflected, could work since lhs must be a type
 //we can't be giving programmers choices, can we?
 5->int28
 Dog<-cat.chew() //turn the cat into a dog then chew...?
+5: int128 //if not in a declaration (e.g. parameter or var decl)
+
+//assignment is an expression btw ofc
 
     
 ```
