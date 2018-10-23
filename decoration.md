@@ -182,5 +182,18 @@ op add (A: Matrix, B: ptr<Matrix>)
 " string literals
  are multiline
 I think"
+
+cast operator?:
+
+5 to int128
+5 as int128
+5 -> int128
+5->int128
+int128<-5 //reflected, could work since lhs must be a type
+(int128) 5  //(c-style) let's not use multiple cast operators...
+//we can't be giving programmers choices, can we?
+5->int28
+Dog<-cat.chew() //turn the cat into a dog then chew...?
+
     
 ```
