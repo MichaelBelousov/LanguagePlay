@@ -151,6 +151,19 @@ class Example \ is ExampleParent
     pass
     //need a null expression?
 
+//solo backslash at the _end_ of the line is a continuation
+class Example
+    is ExampleParent
+    type_name: String = "hello this is a \
+                         long name and is dedented"
+    other_name = 'dedented
+                  blah etc'  //char array literal
+    blah: char = 'c'  //char literal
+    raw_name = `this is a 
+                non-dedented string (it'll have that long space)`
+    format_str = "this is a !format~ string" <- {format: 'formatted'}
+
+
 if _entry
     blah // equivalent to Python __name__ == '__main__' idiom
 
@@ -165,5 +178,9 @@ op add (A: Matrix, B: ptr<Matrix>)
     mov
     `%
     return B
+
+" string literals
+ are multiline
+I think"
     
 ```
