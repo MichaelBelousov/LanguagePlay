@@ -13,6 +13,7 @@
 
 ### Bytes
 
+Byte literals compile to arrays of raw bytes
 ```C
 0x00ff
 ```
