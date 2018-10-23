@@ -4,18 +4,107 @@
 ### Integers
 
 ```C
+int  //alias for int32
+int8
+uint8
+int16
+uint16
+int32
+uint32
+int64
+uint64
+Integer  //unbounded nonprimitive length integer
 ```
 
 ### Floating-Point Numbers
 
 ```C
+float  //alias for float32
+float32
+float64
+Rational  //unbounded nonprimitive length rational (fp) number
 ```
+
+numeric literals always compile to the smallest possible unsigned holder
+that is at least as large as int32
 
 ### Bytes
 
-Byte literals compile to arrays of raw bytes
-```C
-0x00ff
+The `byte` is a type and it can be initialized from character 
+literals, integer literals, or hexadecimal, octal and binary literals. 
+
+Non-decimal number literals
+are not the same type as decimal literals at all, more on that below.
+
+```TypeScript
+b1: byte = 1
+b2: byte = 'c'
+b3: byte, = 0x81
+b4: byte, = 0b10000001
+bar1: byte[] = 1, 2, 3
+bar2: byte[] = 'hello'
+bar3: byte[] = 0x12af
+bar4: byte[3] = 0x12af
 ```
 
-A byte pack will result in a byte array
+##### Byte Literals
+
+Hexadecimal, octal, and binary literals are not interpretted as integers.
+The type of any of those literals is a byte array with inferred-minimum
+length of the literal content.
+
+```C
+bar5: byte[] = 0x00ff
+```
+
+A byte pack is equivalent to a byte array
+
+```C
+0x0, 0x5, 0xaaff == 0x0005aaff
+```
+
+`byte` arrays are like regular arrays in that they can be initialized 
+from any iterable of bytes (or convertible thereof).
+Often however, you want the left to be padded when initializing a
+non-inferred-length array from a byte literal, instead of the right which
+is the default behavior of any collection initialization from a literal.
+For this, use the `bytes[]` type, which does exactly that
+
+```TypeScript
+bar3: byte[] = 0x12af  // == a[0x12, 0xaf]
+bar4: byte[3] = 0x12af // == a[0x12, 0xaf, 0x00]
+bar5: bytes[4] = 0x12af // == a[0x00, 0x00, 0x12, 0xaf]
+other: int[5] = 12,   // == a[12, 0, 0, 0, 0]
+```
+
+It is considerable to alter the default behavior of array initialization
+as a specialization for `byte` arrays, however adding the `bytes[]` 
+type is a cheap sacrifice for consistency of array initialization
+Note that the `bytes` type doesn't have a legal non-array form
+
+#### Conversions
+
+`byte`'s and `byte` arrays can be cast to any data type that can fit
+the size of the array. 
+
+```TypeScript
+i1 = 0x00020005: int32
+i2: int64 = 0xffffffff
+
+func factorial(n: int): int
+    return n ? n * factorial(--n) : 1
+
+i3 = factorial(0x14: int32)  //cast byte array to int32
+
+struct Vec2D
+    x: float32
+    y: float32
+    meth magnitude(this): float32
+        return (x*x + y*y)^^0.5
+
+v = 0xffffffffaaaaaaaa: Vec2D
+```
+
+As you can see in the last example. `byte` arrays can be simply
+converted to whole structs.
+
