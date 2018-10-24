@@ -3,16 +3,53 @@
 
 stuff about types
 
+## Naming
+
+by convention, types use capitalized names
+
 ## Utilities
+
+the `typeof` language feature.
+
+the `Type` type.
+
+the `sizeof` language feature
 
 
 ### Type Aliases
 
 The same type, different name
 
+types attempt to be used like values. They have operators, a `Type` type 
+for instructing the compiler/analyzer, and aliases use the assignment 
+operator
+
+```TypeScript
+MyNewType = SomeOtherType
+//you can optionally indicate it being a Type
+//but it will be deduced
+MyType1: Type = AnotherType  
+MyType2 = ParametrizedType<AnotherType>.InnerType
+a: float32 = 5.6
+MyType3 = typeof a
+MyType4  //I'm forgetting one other good example...
+```
+
 ### Type Clones
 
 Different type, different name, same implementation
+
+```TypeScript
+struct AnotherType
+    meth f(this: This)
+        return 5
+
+MyType5 = cloneof AnotherType
+MyType5 != AnotherType
+
+MyType5().f() == 5
+AnotherType().f() == 5
+```
 
 ## Type Operations
 
