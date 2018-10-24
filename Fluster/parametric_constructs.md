@@ -56,12 +56,28 @@ class ObjectList<T is Class>
 
 _Aliases_
 
-types attempt to be used like values. They have operators, a `Type` for
-parameter identification, and 
+types attempt to be used like values. They have operators, the metatype, `Type` for
+inference, and a lot of advanced crap.
 
 ```TypeScript
 ```
 
+### Nested Parameters
+
+Parametric parameters to parameters are possible
+
+```TypeScript
+
+func map<IterType: Iterable<T: Type>, 
+         FuncType: Func<R: Type, T>>
+        (f: FuncType, iter: IterType): Stream<R>
+    Stream<() => f(iter.next())>  //iter is implicitly captured by reference
+
+a = 2
+map([a](x)=>x+a, 
+    [5, 10, 2]) // == Stream(5, 10, 2)
+
+```
 
 ### Specialization
 

@@ -73,6 +73,19 @@ mystr: String = `goodbye
                  my dear friend`
 ```
 
+### Streams
+
+a functional stream, takes a single argument used 
+to produce the next element. It can be used to make
+cool iterables:
+
+```TypeScript
+ones = Stream<()=>1>()
+naturals = Stream<[i=0]()=>i++>()  //captures i as 0, and 
+                                   //returns + increments it
+                                   //each invocation
+```
+
 ### A note on packs
 
 Thanks to conversion, packs are often equivalent to arrays
