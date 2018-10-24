@@ -1,7 +1,7 @@
 
 # Syntax Hacks
 
-fake a new line
+fake a new line + tab
 
 ```Cpp
 class A \ is B

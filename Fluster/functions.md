@@ -1,13 +1,13 @@
 
+# Functions
+
 ```TypeScript
 func myfunc(a: int = 5)
 ```
+## Anonymous functions (lambdas)
 
 ```TypeScript
 (a1, a2) => a1^/a2
-
-(b1, b2) =>
-    return b1 + b2
 ```
 
 programmers don't like choices

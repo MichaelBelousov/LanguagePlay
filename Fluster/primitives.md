@@ -109,3 +109,13 @@ v = 0xffffffffaaaaaaaa: Vec2D
 As you can see in the last example. `byte` arrays can be simply
 converted to whole structs.
 
+### `Bit`s
+
+like bitflags in C
+
+```TypeScript
+flags: bit[5]
+flags: bit[3]
+```
+
+need magic to combine and save space

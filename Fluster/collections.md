@@ -18,6 +18,8 @@ myarr2: int[] = a[]
 
 ### Packs
 
+A Tuple clone
+
 ```TypeScript
 ```
 
@@ -35,20 +37,20 @@ myset: Set = {1,2,3}
 mymap: Map = {}
 //type is deduced to be per name
 mymap2: Map = {
-    "foo": 'bar',
-    "foobar": a['a', 'b'],  //a char array (could just do 'ab')
-    "hello": world
+    "foo" = 'bar',
+    "foobar" = a['a', 'b'],  //a char array (could just do 'ab')
+    "hello" = world
 }
 ```
 
 ### Structures/Objects
 
-raw structure/object literal:
+raw structure literal:
 ```TypeScript
 {
-    foo='bar',
+    foo: Baz = bar,
     foobar='buzz',
-    hello=world
+    hello=[world, fizz]
 }
 ```
 
@@ -73,8 +75,8 @@ mystr: String = `goodbye
 
 ### A note on packs
 
-some types' pack operations return arrays
-e.g. bytes
+Thanks to conversion, packs are often equivalent to arrays
+and with bytes that includes byte literals
 
 ```TypeScript
 0x0, 0xff, 0xa4, 0xc == a[0x0, 0xff, 0xa4, 0xc] == 0x00ffa40c

@@ -29,3 +29,15 @@ all of em
 ```TypeScript
 #=
 ```
+
+### Operator names
+
+---------------------
+| >=      | gteq    |
+| +       | add     |
+| +=      | addeq   |
+| ^^      | pow     |
+| ^/      | root    |
+---------------------
+```
+
