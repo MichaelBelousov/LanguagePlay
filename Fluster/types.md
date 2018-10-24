@@ -95,3 +95,8 @@ An example null specialization
 struct Node<Null>
     assert false
 ```
+
+## The `Type` Type
+
+for type-taking declarations and constructs, the type, `Type`, is used to 
+indicate a non-value argument

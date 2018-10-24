@@ -3,8 +3,6 @@
 
 ### Endianness
 
-probably machine dependent, 
-but there should be a good way to normalize values
+machine independent, as little-endian.
+but with a good way to convert 
 
-perhaps I will switch this later to be machine independent but conversion
-is easy
