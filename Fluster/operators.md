@@ -8,8 +8,9 @@ all of em
 ### Exponentiation & Rooting
 
 ```TypeScript
-2 ^^ 5  / the fifth power of 2
-2 ^/ 5  / the fifth root of 2
+2 ^^ 5  // the fifth power of 2
+2 ^/ 5  // the fifth root of 2
+^/10    // when unary, the square root
 ```
 
 ### Cast
@@ -24,10 +25,11 @@ all of em
 <-
 ```
 
-### address equality
+### instance equality
 
 ```TypeScript
-#=
+a #= b
+//same as ptr<a> == ptr<b>
 ```
 
 ### Operator names

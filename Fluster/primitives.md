@@ -70,6 +70,8 @@ non-inferred-length array from a byte literal, instead of the right which
 is the default behavior of any collection initialization from a literal.
 For this, use the `bytes[]` type, which does exactly that
 
+<!-- maybe just have it be bytes? -->
+
 ```TypeScript
 bar3: byte[] = 0x12af  // == a[0x12, 0xaf]
 bar4: byte[3] = 0x12af // == a[0x12, 0xaf, 0x00]
