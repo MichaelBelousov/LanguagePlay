@@ -3,6 +3,68 @@
 
 Some philosophy for the design choices of this language.
 
+## interact with C
+
+should be able to link C/C++ libraries, can only transform
+the names and scopes etc
+
+can reimplement the import operator to use import C++ headers
+that should be part of the cpp module
+
+```TypeScript
+
+import cpp
+
+/*
+op import<_=cpp.lib> (path: ImportPath)
+    fullpath = findLib<path>
+    return CPPLib<fullpath>
+
+op import<lib: CPPLib>(path: ImportPath): Module
+    return lib.include(path)
+*/
+
+import<cpp.lib> stdcpp
+import<stdcpp> vector
+import<cpp.h> myheader
+
+```
+
+<!--
+//DOC: op load defines the parameters for loading a module
+-->
+
+``` TypeScript
+
+
+/*
+op import<_=c.lib> (path: ImportPath)
+    fullpath = findLib<path>
+    return CLib<fullpath>
+
+op import<lib: CLib>(path: ImportPath): Module
+    return lib.include(path)
+*/
+
+fluster_case, = import casing
+import c(lib_case=fluster_case)
+
+tran fix_sdl2(target: Module)
+    module _
+        merges target
+        for name, val in target._members
+            name.withoutPrefix("SDL_") <- val
+            name <- 
+    target <- _
+
+sdl2lib = import<c.lib> sdl2
+import<sdl2lib> sdl2
+
+//now we can use sdl
+sdl2.init()
+
+```
+
 ## Fix conventions
 
 ## Power

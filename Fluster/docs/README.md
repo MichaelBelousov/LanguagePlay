@@ -128,6 +128,7 @@ aclass, b_class, cClass = import gross.bile
 
 tran bile2_name_fix<target: Module>
     module _
+        merges target
         AClass = aclass
         aclass <-
     target <- module

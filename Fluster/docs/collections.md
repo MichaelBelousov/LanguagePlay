@@ -16,20 +16,81 @@ myarr: Array<int32> = a[]
 myarr2: int[] = a[]
 ```
 
+### Structs
+
+Unnamed arguments are given a name of `_i` where `i` is replaced with
+its index as an argument.
+```TypeScript
+
+x = Struct("foo", 'fizz', bar=5, baz=5: float)
+
+x._1 == "foo"
+x.bar == 5
+x._2 = 'fizz'
+x.baz == 5.0
+
+typeof x == Struct<String, char[4],  _bar=int, _baz=float>
+
+```
+
 ### Packs
 
-A Tuple clone
+A Struct clone with the get `[]` operator implemented
 
 ```TypeScript
+
+typeof (2, 2) = Pack<int, int>
+
+Pack = cloneof Struct
+
+//index access
+op get<n: uint32>(pack: Pack, n: uint32)
+    return pack._get_by_index<n>()
+
+//type access
+op get<T: Type>(pack: Pack, T: Type)
+    return pack._get_by_type<T>()
+
 ```
 
 ### Sets
 
-use for uniqueness and sub/superset operations
+use for uniqueness sub/superset operations, and crossing
 
 ```TypeScript
 myset: Set = {1,2,3}
 ```
+
+```TypeScript
+a | b  // union
+a + b  // union
+a & b  // intersection
+a - b  // difference
+a > b  // proper superset
+a >= b // superset
+a <= b // subset
+a < b  // proper subset
+a * b  // cartesian product
+a / b  // cartesian quotient (remove all tuples with blah)
+       // {t[1,8], t[1,9], t[2,8], t[2,9]} / t[8,9] = {1, 2}
+a ^^ n // cartesian power
+a ^/ n // catesian root
+       // {t[0,0], t[0,1], t[1,0], t[1,1]} ^/ 2 == {0, 1}
+```
+
+### Tuples
+
+```TypeScript
+
+Tuple: Type = cloneof Pack
+
+//tuple literal
+
+t[]
+
+```
+
+<!-- maybe switch [] to array and l[] to linked list? -->
 
 ### Mappings (Maps)
 
