@@ -15,15 +15,6 @@ that should be part of the cpp module
 
 import cpp
 
-/*
-op import<_=cpp.lib> (path: ImportPath)
-    fullpath = findLib<path>
-    return CPPLib<fullpath>
-
-op import<lib: CPPLib>(path: ImportPath): Module
-    return lib.include(path)
-*/
-
 import<cpp.lib> stdcpp
 import<stdcpp> vector
 import<cpp.h> myheader
@@ -36,15 +27,6 @@ import<cpp.h> myheader
 
 ``` TypeScript
 
-
-/*
-op import<_=c.lib> (path: ImportPath)
-    fullpath = findLib<path>
-    return CLib<fullpath>
-
-op import<lib: CLib>(path: ImportPath): Module
-    return lib.include(path)
-*/
 
 fluster_case, = import casing
 import c(lib_case=fluster_case)
