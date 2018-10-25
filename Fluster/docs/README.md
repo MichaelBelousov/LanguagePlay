@@ -1,7 +1,8 @@
 
 # Fluster
 
-A multi-level language for general programming
+A general programming language with an emphasis on minimality
+(not in features) and abstraction.
 
 ## Introduction
 
@@ -48,7 +49,7 @@ literals, idiomatic byte literals, and more.
 ```TypeScript
 
 vals: int[] = 1, 5, 10, -4
-val: byte[7] = 0x00fa43fc
+val: byte[4] = 0x00fa43fc
 val: byte[1] = 0b11010100
 string_array = a["foo", "bar"]
 string_list = ["foo", "bar"]
@@ -63,15 +64,18 @@ mike = 0x6d696b6500000000000014: Person
 ```
 
 Fluster code has granular declarative composition
+for easy code reuse
 
 ```TypeScript
 
 class A
     is B            // inheritance
     has C           // delegation
-    has D as d      // delegation with accessible obj, d
+    has D as d      // delegation with accessible 
+                    // object, d
     has E.g as g    // single function delegation
-    has F.h as f.h  // single function delegation with accessible obj
+    has F.h as f.h  // single function delegation 
+                    // with accessible object f
 
 ```
 
@@ -81,19 +85,58 @@ only when you need it.
 
 ```TypeScript
 
-enum Flags
-    for i, name in enumerate("read", "write", "append")
-        name = 2^^i
+tran flag_enum<target: Enum>
+    for i, m in enumerate(target._members)
+        m._value = 2^^i
 
-tran require_auth(f: Func, err: String)
-    func _(...args: Args)
-        if authorize() \ return f(...args)
-        else \ throw 401, err
-    f <- _
+@flag_enum
+enum FileOpenFlags
+    read
+    write
+    append
 
-@require_auth("bad auth")
-func find_user(id: String)
+Flags.append == 0b00000100
+Flags.read | Flags.write == 0b00000011
+
+
+Str = String
+tran require_user_pass<target: Func, 
+                       log_msg: Str = "access fail by {{usr}}">
+    func _(usr: Str, psw: Password, ...args: Args)
+        if authorize(usr, psw) 
+            return target(...args)
+        else 
+            log.warn(fmt(log_msg, usr, ...args))
+            throw 403
+    target <- _
+
+@require_user_pass<"bad auth by {{usr}} when searching {{id}}">
+func search_user(id: String)
     ...
 
 ```
+
+Fluster can even let you modify modules to add appropriate 
+functions, transform others, or even ignore other people's 
+demented casing choices.
+
+```TypeScript
+
+snake_caser, = import casing
+
+aclass, b_class, cClass = import gross.bile
+
+tran bile2_name_fix<target: Module>
+    module _
+        AClass = aclass
+        aclass <-
+    target <- module
+
+@snake_caser 
+@bile2_name_fix
+import gross.bile2
+
+```
+
+<!-- create Named packs in pack.md -->
 
