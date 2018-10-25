@@ -21,7 +21,11 @@ all patterns need to be extractable, abstractable, and reusable
 
 ## Math
 
-C operators, but use ^^ for exponentiation
+C operators, but with some extras
+
+^^ for exponentiation
+
+^/ for roots (unary is square root)
 
 ## pack that
 
