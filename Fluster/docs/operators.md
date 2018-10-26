@@ -48,8 +48,9 @@ a #= b
 | `a <= b`    | lteq (a, b)       | *a* is less than or equal to *b* |
 | `a == b`    | eq (a, b)         | *a* is equal to *b* |
 | `a #= b`    | ptreq (a, b)      | `ptr<a> == ptr<b>`, *a*'s address is equivalent to the address of *b* |
-| `a <=> b`   | spaceship (a, b)  | *a* is negative if `a < b`, positive if `a > b`, 0 if `a == b` |
-| `a ~= b`    | approxeq (a, b)   | *a* is approximately equal to *b* |
+| `a <=> b`   | spaceship (a, b)  | result is negative if `a < b`, positive if `a > b`, 0 if `a == b` |
+| `a ~= b`    | approxeq\<epsilon\> (a, b)   | *a* is approximately equal to *b*, which is idoimatically modified in your scope |
+| `a ~ b`    | similar \<epsilon\> (a, b)   | *a* is similar to *b* |
 | `a != b`    | neq (a, b)        | *a* is not equal to *b* |
 | `a >= b`    | gteq (a, b)       | *a* is greater than or equal to *b* |
 | `a > b`     | gt (a, b)         | *a* is greater than *b* |
@@ -62,6 +63,7 @@ a #= b
 | `a / b`     | over (a, b)       | division |
 | `a // b`    | floor (a, b)      | floored division |
 | `a % b`     | modulo (a, b)     | remainder |
+| `a mod b`   | modulo (a, b)     | remainder |
 | `a ^^ b`    | pow (a, b)        | n-th power. Unary uses the natural base, *e* |
 | `^^a`       | pow (a)           | Unary uses the natural base, *e* |
 | `b ^/ a`    | root (a, b)       | bth-root of *a* |
@@ -75,7 +77,7 @@ a #= b
 ||||
 | *bitwise*    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
-| `a | b`     | or                | the bitwise OR of *a* and *b* |
+| `a \| b`     | or                | the bitwise OR of *a* and *b* |
 | `~a`        | complement        | the bitwise complement of *a* |
 | `a ^ b`     | xor               | the bitwise XOR of *a* and *b* |
 | `a >> b`    | rshift            | rightshift *a*'s content by *b* bits and 0-pad |
@@ -83,7 +85,7 @@ a #= b
 ||||
 | *logical*    |||
 | `a & b`     | and               | the logical conjunction of *a* and *b* |
-| `a | b`     | or                | the logical disjunction of *a* and *b* |
+| `a \| b`     | or                | the logical disjunction of *a* and *b* |
 | `~a`        | complement        | the logical negation of *a* |
 | `a ^ b`     | xor               | the logical exclusive or of *a* and *b* |
 | `a -> b`    | implies           | the logical implication of *a* and *b* |
