@@ -68,6 +68,9 @@ a #= b
 | `^^a`       | pow (a)           | Unary uses the natural base, *e* |
 | `b ^/ a`    | root (a, b)       | bth-root of *a* |
 | `^/a`       | root (a)          | square root of *a* |
+| `abs(a)`    | abs (a)           | absolute value of *a* |
+| `floor(a)`  | floor (a)         | floor of *a* |
+| `ceil(a)`   | ceil (a)          | ceil of *a* |
 ||||
 | *typing*     |||
 | `a: B`      | cast (a, B)       | cast expression *a* to type B |
@@ -77,7 +80,7 @@ a #= b
 ||||
 | *bitwise*    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
-| `a \| b`     | or                | the bitwise OR of *a* and *b* |
+| `a \| b`    | or                | the bitwise OR of *a* and *b* |
 | `~a`        | complement        | the bitwise complement of *a* |
 | `a ^ b`     | xor               | the bitwise XOR of *a* and *b* |
 | `a >> b`    | rshift            | rightshift *a*'s content by *b* bits and 0-pad |
@@ -85,13 +88,13 @@ a #= b
 ||||
 | *logical*    |||
 | `a & b`     | and               | the logical conjunction of *a* and *b* |
-| `a \| b`     | or                | the logical disjunction of *a* and *b* |
+| `a \| b`    | or                | the logical disjunction of *a* and *b* |
 | `~a`        | complement        | the logical negation of *a* |
 | `a ^ b`     | xor               | the logical exclusive or of *a* and *b* |
 | `a -> b`    | implies           | the logical implication of *a* and *b* |
 ||||
 | *assignment* |||
-| `a = b`     | assign (a, b)     | *a* copies *b* or *a* is introduced as a copy of *b* |
+| `a = b`     | assign (a, b)     | *a* copies the value of *b*, if the name *a* does not exist, it is created as a copy of *b* |
 | `a += b`    | assignplus (a, b) | `a = a + b` |
 | `a -= b`    | assignminus (a, b)| `a = a - b` |
 | `a *= b`    | assigntimes (a, b)| `a = a * b` |
@@ -100,9 +103,10 @@ a #= b
 | `a ^^= b`   | assignpow         | `a = a ^^ b` |
 | `a ^/= b`   | assignroot        | `a = a ^/ b` |
 | `a &= b`    | assignand         | `a = a & b` |
-| `a |= b`    | assignor          | `a = a | b` |
-| `a >>= b`   | assignrshift      | `a = a >> b` |
+| `a \|= b`   | assignor          | `a = a \| b` |
+| `a >>= b `  | assignrshift      | `a = a >> b` |
 | `a <<= b`   | assignlshift      | `a = a << b` |
+| `a ->= b`   | assignimplies     | `a = a -> b` |
 ||||
 | *memory*     |||
 | `$a`        | copy              | copy of *a* |
@@ -135,8 +139,6 @@ a #= b
 | *compiler*      |||
 | import name    | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |
 | load (...args) | load (...args) | code with arguments for when the module is loaded |
-
-
 
 <!-- 
 add a copy operator? 
