@@ -127,3 +127,10 @@ need magic to combine and save space
 ### `bool`s
 
 `bool`s are a primitive boolean type
+
+true and false literals could be entirely non-magical global values
+
+```TypeScript
+true  = 1: bool
+false = 0: bool
+```

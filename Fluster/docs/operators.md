@@ -77,6 +77,7 @@ a #= b
 | `a: B = ...`| typedecl (a, B)   | declare the type of name *a* to be *B* |
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
+| `is A`      | is (A)            | returns a type unique to the *A* type
 ||||
 | **bitwise**    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
@@ -129,6 +130,7 @@ a #= b
 ||||
 | **function**   |||
 | `[...captures](...args) => expr` | lambda (...args): b | create a struct containing the captures objects, and a function with a reference to the struct over arguments `args` |
+| a(..args) | call (a, ...args) | call *a* with arguments *args* |
 ||||
 | **other**      |||
 | `c ? a : b` | ternary (c, a, b) | if c: *a*, else *b* |

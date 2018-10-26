@@ -26,7 +26,10 @@
 ## filter
 
 ```TypeScript
-filter(
+
+filter<filt: Func>(iter: Iterable)
+    return Stream<>
+
 ```
 
 ## apply
