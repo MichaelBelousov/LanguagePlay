@@ -2,7 +2,21 @@
 # Streams
 
 
+<!--
+add a bit clumping reoder
+-->
+
 ```TypeScript
+
+tran has_sink<Target: Factory>
+    target._construct _
+        merges target
+        static
+            sink: Symbol
+        sink: bit = 0b0
+        op eq (left: Target, right: sink)
+            return truth(left.sink)
+    target <- Scope
 
 struct Stream<>
     fail
@@ -10,7 +24,7 @@ struct Stream<>
 tran stream_impl<target: is Stream>
     struct _
         is Iterator
-        next
+        @public next
         meth begin()
             return this
         meth end()
@@ -38,10 +52,10 @@ struct Stream<func: Func<T: Type, T>,
             return state
 
 @stream_impl
+@has_sink
 struct Stream<func: Func<T: Type, T>, 
               init: T,
               check_stop: Func<bool, T>>
-    _finite = 
     private
         state: T = init
         did_init: bool = false
@@ -49,8 +63,10 @@ struct Stream<func: Func<T: Type, T>,
         if ~did_init
             did_init = true
             return init
+        state = func(state)
+        if check_stop(state)
+            return This.sink
         else
-            state = func(state)
             return state
 ```
 

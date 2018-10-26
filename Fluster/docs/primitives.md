@@ -23,6 +23,7 @@ float  //alias for float32
 float32
 float64
 Rational  //unbounded nonprimitive length rational (fp) number
+infinity: float
 ```
 
 numeric literals always compile to the smallest possible unsigned holder

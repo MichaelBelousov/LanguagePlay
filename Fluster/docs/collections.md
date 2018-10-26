@@ -1,6 +1,17 @@
 
 # Collections
 
+### Unique
+
+maybe `symbol` instead?
+basically an enum value
+
+fake values / empty symbol?
+
+can only be used with overloaded operators
+
+maybe it'll be a constraint to ensure all operators are overloaded to use the symbol
+
 ### Lists
 
 ```TypeScript
