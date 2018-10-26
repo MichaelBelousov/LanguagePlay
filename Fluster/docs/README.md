@@ -51,7 +51,7 @@ literals, idiomatic byte literals, and more.
 vals: int[] = 1, 5, 10, -4
 val: byte[4] = 0x00fa43fc
 val: byte[1] = 0b11010100
-string_array = a["foo", "bar"]
+string_array = ["foo", "bar"]
 string_list = ["foo", "bar"]
 string_map: Map<String, int32>  = {"foo" = 40}
 

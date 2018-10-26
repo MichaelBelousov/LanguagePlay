@@ -73,10 +73,10 @@ For this, use the `bytes[]` type, which does exactly that
 <!-- maybe just have it be bytes? -->
 
 ```TypeScript
-bar3: byte[] = 0x12af  // == a[0x12, 0xaf]
-bar4: byte[3] = 0x12af // == a[0x12, 0xaf, 0x00]
-bar5: bytes[4] = 0x12af // == a[0x00, 0x00, 0x12, 0xaf]
-other: int[5] = 12,   // == a[12, 0, 0, 0, 0]
+bar3: byte[] = 0x12af  // == [0x12, 0xaf]
+bar4: byte[3] = 0x12af // == [0x12, 0xaf, 0x00]
+bar5: bytes[4] = 0x12af // == [0x00, 0x00, 0x12, 0xaf]
+other: int[5] = 12,   // == [12, 0, 0, 0, 0]
 ```
 
 It is considerable to alter the default behavior of array initialization

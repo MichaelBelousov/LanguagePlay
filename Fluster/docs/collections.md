@@ -4,22 +4,23 @@
 ### Lists
 
 ```TypeScript
-mylist: List = []
+mylist: List = (,)
 //List<int32, String>
-mylist: List = [1, "heterogeneous"]
+mylist: List = 1, "heterogeneous"
 ```
 
 ### Arrays
 
 ```TypeScript
-myarr: Array<int32> = a[]
-myarr2: int[] = a[]
+myarr: Array<int32> = []
+myarr2: int[] = []
 ```
 
 ### Structs
 
 Unnamed arguments are given a name of `_i` where `i` is replaced with
 its index as an argument.
+
 ```TypeScript
 
 x = Struct("foo", 'fizz', bar=5, baz=5: float)
@@ -72,10 +73,10 @@ a <= b // subset
 a < b  // proper subset
 a * b  // cartesian product
 a / b  // cartesian quotient (remove all tuples with blah)
-       // {t[1,8], t[1,9], t[2,8], t[2,9]} / t[8,9] = {1, 2}
+       // {(1,8), (1,9), (2,8), (2,9)} / (8,9) = {1, 2}
 a ^^ n // cartesian power
 a ^/ n // catesian root
-       // {t[0,0], t[0,1], t[1,0], t[1,1]} ^/ 2 == {0, 1}
+       // {(0,0), (0,1), (1,0), (1,1)} ^/ 2 == {0, 1}
 ```
 
 ### Tuples
@@ -84,13 +85,9 @@ a ^/ n // catesian root
 
 Tuple: Type = cloneof Pack
 
-//tuple literal
-
-t[]
+Tuple(1, 2, 3)
 
 ```
-
-<!-- maybe switch [] to array and l[] to linked list? -->
 
 ### Mappings (Maps)
 
@@ -99,7 +96,7 @@ mymap: Map = {}
 //type is deduced to be per name
 mymap2: Map = {
     "foo" = 'bar',
-    "foobar" = a['a', 'b'],  //a char array (could just do 'ab')
+    "foobar" = ['a', 'b'],  //a char array (could just do 'ab')
     "hello" = world
 }
 ```
@@ -153,5 +150,5 @@ Thanks to conversion, packs are often equivalent to arrays
 and with bytes that includes byte literals
 
 ```TypeScript
-0x0, 0xff, 0xa4, 0xc == a[0x0, 0xff, 0xa4, 0xc] == 0x00ffa40c
+0x0, 0xff, 0xa4, 0xc == [0x0, 0xff, 0xa4, 0xc] == 0x00ffa40c
 ```
