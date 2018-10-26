@@ -3,13 +3,39 @@
 
 Some philosophy for the design choices of this language.
 
-## interact with C
+## just a language
 
-should be able to link C/C++ libraries, can only transform
-the names and scopes etc
+Fluster is not a runtime, Fluster is not a platform.
+Fluster isn't opinionated and you can write your code however you like.
+Fluster may, however, be opionated about how to design programming languages.
 
-can reimplement the import operator to use import C++ headers
-that should be part of the cpp module
+Fluster is just a way to write complicated assembly code, and tools
+will need to be developed separately and modularly around it to use
+it in JIT-compilers, code analysis, parallelism, with packages etc. 
+But with the LLVM platform and its many levels of compiler and code 
+abstraction, that shouldn't be too hard.
+
+## abstract as \*\*\*\*
+
+provide all possible abstractions as simply as possible
+
+## no magic
+
+As much of the language as possible without losing expressiveness
+can, should, and will be implemented within the language itself.
+
+language features should be a small core set which can in theory
+be abandoned.
+
+## interact with low-level code
+
+should be able to link objects and libraries, 
+and apply possible transformations, additions, added scopes, etc.
+
+for example, the cpp and c modules have a user import operator 
+that allows you to import C++ headers for their types, and libraries
+as well as objects for their code
+
 
 ```TypeScript
 
@@ -25,27 +51,25 @@ import<cpp.h> myheader
 //DOC: op load defines the parameters for loading a module
 -->
 
+Here we can already start using c code, such as the library SDL2.
+
 ``` TypeScript
 
 
 fluster_case, = import casing
 import c(lib_case=fluster_case)
 
-tran fix_sdl2(target: Module)
-    module _
-        merges target
-        for name, val in target._members
-            name.withoutPrefix("SDL_") <- val
-            name <- 
-    target <- _
-
 sdl2lib = import<c.lib> sdl2
 import<sdl2lib> sdl2
 
 //now we can use sdl
-sdl2.init()
+sdl2.SDL_Init()
 
 ```
+
+In the C interaction section, you can see a quick example on how to remove the SDL prefix
+for your own code.
+<!-- add a link -->
 
 ## Fix conventions
 

@@ -17,7 +17,7 @@ struct PriorityQueue<ContainerType: Container<T: Type>,
         container: ContainerType
     @public meth add(t: T): void
         i = container.length
-        for x: T in container.backwards()
+        for x: T in reversed(container)
             if weight(t) > weight(x)
                 continue
             else
@@ -26,6 +26,11 @@ struct PriorityQueue<ContainerType: Container<T: Type>,
             i--
 
 List2D<T: Type> = List<List<T>>
+mylist: List2D<char>
+mylist = [['h', 'y'], ['n', 'n'], []]
+
+Tree<T: Type> = Tuple<T, Tree<T>|null, Tree<T>|null>
+
 mylist: List2D<char>
 mylist = [['h', 'y'], ['n', 'n'], []]
 
