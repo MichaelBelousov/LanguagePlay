@@ -43,7 +43,7 @@ a #= b
 
 | syntactic | operation         | description |
 |-----------|-------------------|-------------|
-| *comparison* |||
+| **comparison** |||
 | `a < b`     | lt (a, b)         | *a* is less than *b* |
 | `a <= b`    | lteq (a, b)       | *a* is less than or equal to *b* |
 | `a == b`    | eq (a, b)         | *a* is equal to *b* |
@@ -55,8 +55,8 @@ a #= b
 | `a >= b`    | gteq (a, b)       | *a* is greater than or equal to *b* |
 | `a > b`     | gt (a, b)         | *a* is greater than *b* |
 ||||
-| *mathematical* |||
-| `a + b`     | plus (a, b)       | addition *(rename to plus vs minus?)* |
+| **mathematical** |||
+| `a + b`     | plus (a, b)       | addition  |
 | `a - b`     | minus (a, b)      | subtraction |
 | `-a`        | minus (a)         | negation |
 | `a * b`     | times (a, b)      | multiplication |
@@ -72,13 +72,13 @@ a #= b
 | `floor(a)`  | floor (a)         | floor of *a* |
 | `ceil(a)`   | ceil (a)          | ceil of *a* |
 ||||
-| *typing*     |||
+| **typing**     |||
 | `a: B`      | cast (a, B)       | cast expression *a* to type B |
 | `a: B = ...`| typedecl (a, B)   | declare the type of name *a* to be *B* |
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
 ||||
-| *bitwise*    |||
+| **bitwise**    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
 | `a \| b`    | or                | the bitwise OR of *a* and *b* |
 | `~a`        | complement        | the bitwise complement of *a* |
@@ -86,14 +86,14 @@ a #= b
 | `a >> b`    | rshift            | rightshift *a*'s content by *b* bits and 0-pad |
 | `a << b`    | lshift            | leftshift *a*'s content by *b* bits and 0-pad |
 ||||
-| *logical*    |||
+| **logical**    |||
 | `a & b`     | and               | the logical conjunction of *a* and *b* |
 | `a \| b`    | or                | the logical disjunction of *a* and *b* |
 | `~a`        | complement        | the logical negation of *a* |
 | `a ^ b`     | xor               | the logical exclusive or of *a* and *b* |
 | `a -> b`    | implies           | the logical implication of *a* and *b* |
 ||||
-| *assignment* |||
+| **assignment** |||
 | `a = b`     | assign (a, b)     | *a* copies the value of *b*, if the name *a* does not exist, it is created as a copy of *b* |
 | `a += b`    | assignplus (a, b) | `a = a + b` |
 | `a -= b`    | assignminus (a, b)| `a = a - b` |
@@ -108,37 +108,37 @@ a #= b
 | `a <<= b`   | assignlshift      | `a = a << b` |
 | `a ->= b`   | assignimplies     | `a = a -> b` |
 ||||
-| *memory*     |||
+| **memory**     |||
 | `$a`        | copy              | copy of *a* |
 | `a <- b`    | replace           | name replacement of *a* |
 | `a <-`      | remove            | name deletion of *a* |
 ||||
-| *iteration*    |||
+| **iteration**    |||
 | `a,...c = d`| pack              | *a* is single-packed while c is packed from d |
 | `...a`      | unpack            | *a* is pack-expanded in the expression |
 ||||
-| *special*    |||
+| **special**    |||
 |             | create            | when an object is created, this operation is invoked |
 |             | delete            | when an object is deleted (goes out of scope), this operation is invoked |
 | `assert a, b` | assert          | assert the `truth(a)` and fail with error *b* if false |
 ||||
-| *access*     |||
+| **access**     |||
 | `a[k]`      | get (a, k)        | execute the get operation of *a*'s type on *a* with k |
 | `a[k] = b`  | set (a, k, b)     | execute the set operation of *a*'s type on *a* with k being set to *b* |
 | `a.b`       | member (a, b)     | access the name *b* in *a*
 ||||
-| *function*   |||
+| **function**   |||
 | `[...captures](...args) => expr` | lambda (...args): b | create a struct containing the captures objects, and a function with a reference to the struct over arguments `args` |
 ||||
-| *other*      |||
+| **other**      |||
 | `c ? a : b` | ternary (c, a, b) | if c: *a*, else *b* |
-| if a        | truth             | conversion of a to bool type |
-| while a     | truth             | conversion of a to bool type |
-| until a     | truth             | conversion of a to bool type |
+| `if a`      | truth             | conversion of a to bool type |
+| `while a`   | truth             | conversion of a to bool type |
+| `until a`   | truth             | conversion of a to bool type |
 ||||
 | *compiler*      |||
-| import name    | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |
-| load (...args) | load (...args) | code with arguments for when the module is loaded |
+| `import name`  | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |
+|                | load (...args) | code with arguments for when the module is loaded |
 
 <!-- 
 add a copy operator? 
