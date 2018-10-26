@@ -17,6 +17,8 @@
 ```TypeScript
 ```
 
+## range
+
 ## map
 
 ## zip
