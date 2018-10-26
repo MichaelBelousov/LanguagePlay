@@ -7,6 +7,7 @@
 interface Iterable
     begin: meth(this,)
     end: meth(this,)
+    _canbe_infinite
 ```
 
 # Iterables
