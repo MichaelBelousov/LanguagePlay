@@ -42,7 +42,7 @@ a #= b
 -->
 
 | operation | identifier        | description |
------------------------------------------------
+|-----------|-------------------|-------------|
 | *comparison* |||
 | `a < b`     | lt                | less than |
 | `a <= b`    | lteq              | less than or equal to |
