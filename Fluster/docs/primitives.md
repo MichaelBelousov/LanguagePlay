@@ -84,6 +84,7 @@ as a specialization for `byte` arrays, however adding the `bytes[]`
 type is a cheap sacrifice for consistency of array initialization
 Note that the `bytes` type doesn't have a legal non-array form
 
+
 #### Conversions
 
 `byte`'s and `byte` arrays can be cast to any data type that can fit
@@ -121,3 +122,8 @@ flags: bit[3]
 ```
 
 need magic to combine and save space
+
+
+### `bool`s
+
+`bool`s are a primitive boolean type

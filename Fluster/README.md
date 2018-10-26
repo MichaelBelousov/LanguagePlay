@@ -42,7 +42,7 @@ including operators.
 
 ```TypeScript
 
-val: int = 4          //typed declaration
+val: int = 4            //typed declaration
 MyFloat: Type = float64 //type alias
 decimal = val: float64  //casting is the same syntax
 
@@ -64,9 +64,30 @@ struct Person
     name: char[10]
     age: uint8
 
-mike = 0x6d696b6500000000000014: Person
+dan = 0x6d696b6500000000000014: Person
 
 ```
+
+Fluster has pack-based uniform initialization
+
+```TypeScript
+
+val2 = 0x5f            //inferred to byte[1]
+val3, = 0x5f           //inferred to byte
+x = 'hello'            //char[5]
+y: String = 'hello'    //converted from char to string of length 6
+
+a, b, c, ...rest = [5, 6, -2, 20, 4]
+a == 5
+b == 6
+c == -2
+rest == [20, 4]
+
+mylist: List2D<T> = (1, 2), (), (0,), (4, 5, 8, 2)
+
+```
+
+
 
 Fluster code has granular declarative composition
 for easy code reuse
@@ -126,23 +147,31 @@ functions, transform others, or even ignore other people's
 demented casing choices.
 
 ```TypeScript
+aclass, b_class, cClass = import gross.bile
+```
+
+What gross inconsistency, we can patch that module
+but we will need to fix at least the aclass declaration
+ourselves which we can do with a custom transformer
+
+
+```TypeScript
 
 snake_caser, = import casing
 
-aclass, b_class, cClass = import gross.bile
-
-tran bile2_name_fix<target: Module>
+tran bile_fix<target: Module>
+    @snake_caser
     module _
         merges target
         AClass = aclass
         aclass <-
-    target <- module
+    target <- _
 
-@snake_caser 
-@bile2_name_fix
-import gross.bile2
+a_class, b_class, c_class = @bile_fix import gross.bile
+
+@bile_fix
+import gross.bile
 
 ```
 
-<!-- create Named packs in pack.md -->
-
+<!-- how should we handle transformers on import statements? -->
