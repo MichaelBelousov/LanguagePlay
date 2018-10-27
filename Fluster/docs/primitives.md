@@ -118,8 +118,9 @@ converted to whole structs.
 like bitflags in C
 
 ```TypeScript
-flags: bit[5]
-flags: bit[3]
+flags1: bit[5]
+flags2: bit[3]
+flags3 = 0b11 //bit array literal
 ```
 
 need magic to combine and save space

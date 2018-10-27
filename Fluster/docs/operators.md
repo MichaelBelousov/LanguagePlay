@@ -77,7 +77,7 @@ a #= b
 | `a: B = ...`| typedecl (a, B)   | declare the type of name *a* to be *B* |
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
-| `is A`      | is (A)            | returns a type unique to the *A* type
+| `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* |
 ||||
 | **bitwise**    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
@@ -117,6 +117,9 @@ a #= b
 | **iteration**    |||
 | `a,...c = d`| pack              | *a* is single-packed while c is packed from d |
 | `...a`      | unpack            | *a* is pack-expanded in the expression |
+| `a in b`    | contain           | true if *b* contains *a* |
+| `b has a`   | contain           | true if *b* contains *a* |
+| `b contains a` | contain        | true if *b* contains *a* |
 ||||
 | **special**    |||
 |             | create            | when an object is created, this operation is invoked |
