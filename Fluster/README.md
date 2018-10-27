@@ -4,6 +4,8 @@
 A general programming language with an emphasis on minimality
 (not in features) and abstraction.
 
+Maybe rename to JAPL? (Just A Programming Language) with the logo if an apple?
+
 ## Introduction
 
 Fluster code constructs can be made parametric

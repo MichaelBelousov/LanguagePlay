@@ -112,7 +112,11 @@ mymap2: Map = {
 }
 ```
 
-### Structures/Objects
+### Objects
+
+classes vs. structs?
+
+### Structures
 
 raw structure literal:
 ```TypeScript
