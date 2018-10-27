@@ -111,6 +111,8 @@ a #= b
 ||||
 | **memory**     |||
 | `$a`        | copy              | copy of *a* |
+| `$a`        | name              | a name literal |
+| `$name`     | name              | read the binding of a name |
 | `a <- b`    | replace           | name replacement of *a* |
 | `a <-`      | remove            | name deletion of *a* |
 ||||
