@@ -64,8 +64,8 @@ a #= b
 | `a // b`    | floor (a, b)      | floored division |
 | `a % b`     | modulo (a, b)     | remainder |
 | `a mod b`   | modulo (a, b)     | remainder |
-| `a ^^ b`    | pow (a, b)        | n-th power. Unary uses the natural base, *e* |
-| `^^a`       | pow (a)           | Unary uses the natural base, *e* |
+| `a ^^ b`    | pow (a, b)        | *b*-th power of *a*. Unary uses the natural base, *e* |
+| `^^a`       | pow (a)           | *a*-th power of e |
 | `b ^/ a`    | root (a, b)       | bth-root of *a* |
 | `^/a`       | root (a)          | square root of *a* |
 | `abs(a)`    | abs (a)           | absolute value of *a* |
@@ -74,10 +74,13 @@ a #= b
 ||||
 | **typing**     |||
 | `a: B`      | cast (a, B)       | cast expression *a* to type B |
-| `a: B = ...`| typedecl (a, B)   | declare the type of name *a* to be *B* |
+| `a: B = `   | typedecl (a, B)   | declare the type of name *a* to be *B* |
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
-| `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* |
+| `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* (all types convertible to *A*) |
+| `A?`        | opt (A)            | sugar for `A | null` |
+| ``      |             | |
+| types also have all the set operators |||
 ||||
 | **bitwise**    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
@@ -110,9 +113,9 @@ a #= b
 | `a ->= b`   | assignimplies     | `a = a -> b` |
 ||||
 | **memory**     |||
-| `$a`        | copy              | copy of *a* |
+| `+a`        | copy              | copy of *a* |
 | `$a`        | name              | a name literal |
-| `$name`     | name              | read the binding of a name |
+| `$name =`   | name              | read the binding of a name |
 | `a <- b`    | replace           | name replacement of *a* |
 | `a <-`      | remove            | name deletion of *a* |
 ||||
@@ -124,14 +127,14 @@ a #= b
 | `b contains a` | contain        | true if *b* contains *a* |
 ||||
 | **special**    |||
-|             | create            | when an object is created, this operation is invoked |
-|             | delete            | when an object is deleted (goes out of scope), this operation is invoked |
+|             | leave             | invoked when an object leaves scope |
 | `assert a, b` | assert          | assert the `truth(a)` and fail with error *b* if false |
 ||||
 | **access**     |||
 | `a[k]`      | get (a, k)        | execute the get operation of *a*'s type on *a* with k |
 | `a[k] = b`  | set (a, k, b)     | execute the set operation of *a*'s type on *a* with k being set to *b* |
 | `a.b`       | member (a, b)     | access the name *b* in *a*
+| `.a`        | global (a)        | access a name, *a* from global scope
 ||||
 | **function**   |||
 | `[...captures](...args) => expr` | lambda (...args): b | create a struct containing the captures objects, and a function with a reference to the struct over arguments `args` |
@@ -139,11 +142,11 @@ a #= b
 ||||
 | **other**      |||
 | `c ? a : b` | ternary (c, a, b) | if c: *a*, else *b* |
-| `if a`      | truth             | conversion of a to bool type |
-| `while a`   | truth             | conversion of a to bool type |
-| `until a`   | truth             | conversion of a to bool type |
+| `if a`      | truth             | conversion of *a* to bool type |
+| `while a`   | truth             | conversion of *a* to bool type |
+| `until a`   | truth             | conversion of *a* to bool type |
 ||||
-| *compiler*      |||
+| **compiler**    |||
 | `import name`  | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |
 |                | load (...args) | code with arguments for when the module is loaded |
 

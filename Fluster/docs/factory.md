@@ -7,61 +7,80 @@ Class is a reference factory
 struct is a value factory
 both create data  with functions, methods, fields, scopes accessibility
 
-```TypeScript
+I've decided to not add metaclasses/scope creation yet for simplicity
 
-//e.g. namespace
-namespace blah
-    x: int32 = 4
-    func hello() / print("hello")
-
-malloc, copy = import memory
-
-metatype type
-    pass
-
-namespace blah
-    op call<call
-
-//maybe make types have a domain iterator operation?
-//to iterate through bits 0b0, 0b1, 0b10, 0b100, etc
-//0, 1, 2, 3, 4 for unsigned int
-enum blah2: flags
-    write
-    read
-
-//named namespaces are types and values
-class = cloneof Type
-op namespace <decl=$struct, Target: Namespace>
-    op call<class: Target> (class: Target, ...args: Args)
-        //try this...?
-        class._op.namespace.without_static()
-        class._op.call(...args)
-
-op namespace <decl=$class, Target: Namespace>
-    op call (class: Target, ...args: Args)
-        mem = malloc(sizeof Target)
-        copy(Target, mem)
-
-//a class is a namespace with a call operator that copies the namespace
-//to a malloc'd area and sets up inheritance
-
-```
 
 ## Structs
 
-a namespace with the call operator implemented to generate an 
-instance on the stack.
+a namespace with the call operator implemented to return an 
+instance on the stack
 
 ## Classes
 
 a class is a struct with dynamic dispatch (vtable) and inheritance
 
-
 ## Low-level abstraction
 
 the vtable, inheritance, polymorphism, dynamic dispatch,
 factories, classes, metaclasses, etc should ideally all be implemented in
-Fluster instead of language features
+Fluster instead of language features by using operator overloading
+
+
+## Custom namespaces
+
+Should be ideally syntactic sugar for a transformer applied to a namespace
+
+```TypeScript
+
+malloc, copy, free = import
+
+tran struct<Target: Type>
+    namespace _
+        merges Target
+        op call (...args: Args): Target
+            // get the non-static members of the namespace
+            // return by value (copy)
+            inst = _._members: Target
+            inst._op.call(...args) //should I make this an explicit argument?
+            return inst
+    Target <- _
+    //might want to type utility to not include static members
+
+tran class<Target: Type>
+    namespace _
+        merges Target
+        static
+            vt = VTable<Type>
+        op call (...args: Args): Target
+            // get the non-static members of the namespace
+            // return by value (copy)
+            inst = malloc(sizeof _._members members): ptr<Target>
+            copy(_._members, inst)
+            inst._op.call(...args)
+        op leave ()
+            free(this)
+        for i, m in this._methods
+            m = (...args) => vt[i](...args)  //do a real vtable building
+
+    Target <- _
+
+@struct
+namespace Vec2D
+    x: float32 = 0
+    y: float32 = 0
+    meth size(Vec2D v): float32 
+        return ^/(x^^2 + y^^2)
+
+
+op meta<$class, target> 
+    return @class target
+    
+class Worker
+    meth work()
+        ...
+    //meth is just syntactic sugar for a function taking a this argument
+
+```
 
 ## malloc
 
@@ -77,35 +96,4 @@ enum access
     protected
     private
 
-//specializations vs defaults?
-//probably just require explicit typing
-//Name<T>
-
-//specialize the scope operator for the name, class
-op scope<scope_name=n"class", name: Name>
-    @outer cls_name: Type
-    op call (lhs: $cls_name
-        object
-
-//need to formalize metatypes...
-//could be used to define enums, classes, etc
-op scope<decl='class', Target: Struct>
-    op call (lhs: is Target)
-        ptr<x> = malloc(lhs)
-    struct _
-        vtable: Func[]
-        merges Target
-    target <- ref<_>
-
-//probably start with struct and create a class from it is better
-
-class hello
-    x: int32
-
-scope class
-    op scope (this: This)
-        
-    op call (lhs: This, ...args): T
-        lhs._members
-    
 ```
