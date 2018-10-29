@@ -9,14 +9,6 @@ both create data  with functions, methods, fields, scopes accessibility
 
 I've decided to not add metaclasses/scope creation yet for simplicity
 
-```TypeScript
-
-construct struct<This: Type>
-    op call (...args: Args): This
-        return This
-
-```
-        
 
 ## Structs
 
@@ -32,7 +24,63 @@ a class is a struct with dynamic dispatch (vtable) and inheritance
 
 the vtable, inheritance, polymorphism, dynamic dispatch,
 factories, classes, metaclasses, etc should ideally all be implemented in
-Fluster instead of language features
+Fluster instead of language features by using operator overloading
+
+
+## Custom namespaces
+
+Should be ideally syntactic sugar for a transformer applied to a namespace
+
+```TypeScript
+
+malloc, copy, free = import
+
+tran struct<Target: Type>
+    namespace _
+        merges Target
+        op call (...args: Args): Target
+            // get the non-static members of the namespace
+            // return by value (copy)
+            inst = _._members: Target
+            inst._op.call(...args) //should I make this an explicit argument?
+            return inst
+    Target <- _
+
+tran class<Target: Type>
+    namespace _
+        merges Target
+        static
+            vt = VTable<Type>
+        op call (...args: Args): Target
+            // get the non-static members of the namespace
+            // return by value (copy)
+            inst = malloc(sizeof _._members members): ptr<Target>
+            copy(_._members, inst)
+            inst._op.call(...args)
+        op leave ()
+            free(this)
+        for i, m in this._methods
+            m = (...args) => vt[i](...args)  //do a real vtable building
+
+    Target <- _
+
+@struct
+namespace Vec2D
+    x: float32 = 0
+    y: float32 = 0
+    meth size(Vec2D v): float32 
+        return ^/(x^^2 + y^^2)
+
+
+op meta<$class, target> 
+    return @class target
+    
+class Worker
+    meth work()
+        ...
+    //meth is just syntactic sugar for a function taking a this argument
+
+```
 
 ## malloc
 
@@ -48,35 +96,4 @@ enum access
     protected
     private
 
-//specializations vs defaults?
-//probably just require explicit typing
-//Name<T>
-
-//specialize the scope operator for the name, class
-op scope<scope_name=n"class", name: Name>
-    @outer cls_name: Type
-    op call (lhs: $cls_name
-        object
-
-//need to formalize metatypes...
-//could be used to define enums, classes, etc
-op scope<decl='class', Target: Struct>
-    op call (lhs: is Target)
-        ptr<x> = malloc(lhs)
-    struct _
-        vtable: Func[]
-        merges Target
-    target <- ref<_>
-
-//probably start with struct and create a class from it is better
-
-class hello
-    x: int32
-
-scope class
-    op scope (this: This)
-        
-    op call (lhs: This, ...args): T
-        lhs._members
-    
 ```

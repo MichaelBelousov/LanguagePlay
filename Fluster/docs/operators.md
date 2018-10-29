@@ -126,8 +126,7 @@ a #= b
 | `b contains a` | contain        | true if *b* contains *a* |
 ||||
 | **special**    |||
-|             | create            | when an object is created, this operation is invoked |
-|             | delete            | when an object is deleted (goes out of scope), this operation is invoked |
+|             | leave             | invoked when an object leaves scope |
 | `assert a, b` | assert          | assert the `truth(a)` and fail with error *b* if false |
 ||||
 | **access**     |||
