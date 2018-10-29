@@ -78,6 +78,7 @@ a | b  // union
 a + b  // union
 a & b  // intersection
 a - b  // difference
+~a     // complement (lazy)
 a > b  // proper superset
 a >= b // superset
 a <= b // subset
@@ -87,7 +88,7 @@ a / b  // cartesian quotient (remove all tuples with blah)
        // {(1,8), (1,9), (2,8), (2,9)} / (8,9) = {1, 2}
 a ^^ n // cartesian power
 a ^/ n // catesian root
-       // {(0,0), (0,1), (1,0), (1,1)} ^/ 2 == {0, 1}
+       // 2 ^/ {(0,0), (0,1), (1,0), (1,1)} == {0, 1}
 ```
 
 ### Tuples

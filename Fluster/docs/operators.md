@@ -64,8 +64,8 @@ a #= b
 | `a // b`    | floor (a, b)      | floored division |
 | `a % b`     | modulo (a, b)     | remainder |
 | `a mod b`   | modulo (a, b)     | remainder |
-| `a ^^ b`    | pow (a, b)        | n-th power. Unary uses the natural base, *e* |
-| `^^a`       | pow (a)           | Unary uses the natural base, *e* |
+| `a ^^ b`    | pow (a, b)        | *b*-th power of *a*. Unary uses the natural base, *e* |
+| `^^a`       | pow (a)           | *a*-th power of e |
 | `b ^/ a`    | root (a, b)       | bth-root of *a* |
 | `^/a`       | root (a)          | square root of *a* |
 | `abs(a)`    | abs (a)           | absolute value of *a* |
@@ -74,10 +74,12 @@ a #= b
 ||||
 | **typing**     |||
 | `a: B`      | cast (a, B)       | cast expression *a* to type B |
-| `a: B = ...`| typedecl (a, B)   | declare the type of name *a* to be *B* |
+| `a: B = `   | typedecl (a, B)   | declare the type of name *a* to be *B* |
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
-| `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* |
+| `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* (all types convertible to *A*) |
+| ``      |             | |
+| types also have all the set operators |||
 ||||
 | **bitwise**    |||
 | `a & b`     | and               | the bitwise AND of *a* and *b* |
@@ -110,9 +112,9 @@ a #= b
 | `a ->= b`   | assignimplies     | `a = a -> b` |
 ||||
 | **memory**     |||
-| `$a`        | copy              | copy of *a* |
+| `+a`        | copy              | copy of *a* |
 | `$a`        | name              | a name literal |
-| `$name`     | name              | read the binding of a name |
+| `$name =`   | name              | read the binding of a name |
 | `a <- b`    | replace           | name replacement of *a* |
 | `a <-`      | remove            | name deletion of *a* |
 ||||
@@ -143,7 +145,7 @@ a #= b
 | `while a`   | truth             | conversion of a to bool type |
 | `until a`   | truth             | conversion of a to bool type |
 ||||
-| *compiler*      |||
+| **compiler**    |||
 | `import name`  | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |
 |                | load (...args) | code with arguments for when the module is loaded |
 
