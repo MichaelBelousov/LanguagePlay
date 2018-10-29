@@ -19,7 +19,7 @@ tran has_sink<Target: Factory>
     target <- Scope
 
 struct Stream<>
-    fail
+    ...
 
 tran stream_impl<target: is Stream>
     struct _

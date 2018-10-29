@@ -12,9 +12,7 @@
 ```TypeScript
 
 interface Iterable<T: Type>
-    meth begin(): Iterator
-    meth end(): Iterator
-    length: meth(): uint32 | infinity
+    meth getIterator(): Iterator
 
 ```
 
@@ -23,11 +21,8 @@ interface Iterable<T: Type>
 ```TypeScript
 
 interface Iterator<T: Type>
-    is Iterable<T>
-    iterable: Iterable
-    meth begin(): Iterator
-        return this
     meth next(): T
+    meth done(): bool
 
 ```
 

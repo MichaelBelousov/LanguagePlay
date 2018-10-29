@@ -78,6 +78,7 @@ a #= b
 | `A has B`   | has (A, B)        | type *A*'s composition contains a *B* object |
 | `A is B`    | is (A, B)         | type *A* is of type *B* |
 | `is A`      | is (A)            | returns a metatype unique to the type tree rooted at type *A* (all types convertible to *A*) |
+| `A?`        | opt (A)            | sugar for `A | null` |
 | ``      |             | |
 | types also have all the set operators |||
 ||||
@@ -133,6 +134,7 @@ a #= b
 | `a[k]`      | get (a, k)        | execute the get operation of *a*'s type on *a* with k |
 | `a[k] = b`  | set (a, k, b)     | execute the set operation of *a*'s type on *a* with k being set to *b* |
 | `a.b`       | member (a, b)     | access the name *b* in *a*
+| `.a`        | global (a)        | access a name, *a* from global scope
 ||||
 | **function**   |||
 | `[...captures](...args) => expr` | lambda (...args): b | create a struct containing the captures objects, and a function with a reference to the struct over arguments `args` |
@@ -140,9 +142,9 @@ a #= b
 ||||
 | **other**      |||
 | `c ? a : b` | ternary (c, a, b) | if c: *a*, else *b* |
-| `if a`      | truth             | conversion of a to bool type |
-| `while a`   | truth             | conversion of a to bool type |
-| `until a`   | truth             | conversion of a to bool type |
+| `if a`      | truth             | conversion of *a* to bool type |
+| `while a`   | truth             | conversion of *a* to bool type |
+| `until a`   | truth             | conversion of *a* to bool type |
 ||||
 | **compiler**    |||
 | `import name`  | import<...Ts>(path: ImportPath, ...args) | import a package with import arguments *args* |

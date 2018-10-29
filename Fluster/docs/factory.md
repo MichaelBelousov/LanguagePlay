@@ -12,13 +12,12 @@ I've decided to not add metaclasses/scope creation yet for simplicity
 
 ## Structs
 
-a namespace with the call operator implemented to generate an 
-instance on the stack.
+a namespace with the call operator implemented to return an 
+instance on the stack
 
 ## Classes
 
 a class is a struct with dynamic dispatch (vtable) and inheritance
-
 
 ## Low-level abstraction
 
@@ -45,6 +44,7 @@ tran struct<Target: Type>
             inst._op.call(...args) //should I make this an explicit argument?
             return inst
     Target <- _
+    //might want to type utility to not include static members
 
 tran class<Target: Type>
     namespace _
