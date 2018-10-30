@@ -1,117 +1,17 @@
 
 /* Defs */
 
+%o outfile="lexer_core.cpp" header-file="lexer_core.h"
+%o reentrant 
+%o noyywrap 
+%o never-interactive 
+%o nounistd
+%o bison-bridge
+
 %top{
 #include <string>
 #include <memory>
-
-//move this to a seperate translation unit and link
-struct Lexeme {
-    template<typename T, typename String>
-    Lexeme(T in_type, String&& in_source)
-        : type(static_cast<int>(in_type))
-        , source(std::forward(in_source)) {}
-    int type;
-    std::string source;
-};
-
-namespace toks {
-
-    //namespace spc {
-    enum spc {
-        newline,
-        tab,
-        indent_space
-    }; //};
-
-    enum ops {
-        rangle = indent_space+1,
-        lteq,
-        eq,
-        ptreq,
-        approxeq,
-        spaceship,
-        similar,
-        neq,
-        gteq,
-        langle,
-        plus,
-        minus,
-        times,
-        div,
-        divfloor,
-        percent,
-        mod,
-        pow,
-        root,
-        type,
-        has,
-        is,
-        and_,
-        or_,
-        xor_,
-        rshift,
-        lshift,
-        implies,
-        assign,
-        assignplus,
-        assignminus,
-        assigntimes,
-        assigndiv,
-        assigndivfloor,
-        assignpow,
-        assignroot,
-        assignand,
-        assignor,
-        assignrshift,
-        assignlshift,
-        assignimplies,
-        larrow,
-        ellipse,
-        in,
-        contains,
-        assert,
-        lbrack,
-        rbrack,
-        lpar,
-        rpar,
-        dot,
-        comma,
-        bigrarrow,
-        ques,
-    };
-
-    enum kwords {
-        if_ = ques+1,
-        else_,
-        elif_,
-        for_,
-        while_,
-        until_,
-        try_,
-        catch_,
-        throw_,
-        with_,
-        struct_,
-        class_,
-        const_,
-        typeof_,
-        cloneof_,
-        import_,
-        export_
-    };
-
-    enum lits {
-        int_ = export_+1,
-        float_,
-        byte_,
-        bit_,
-        octal_,
-        string_,
-        string_raw_
-    };
-};
-
+#include "parse.h"
 %}
 
 %class{
@@ -159,7 +59,7 @@ string_content      {any}*[^\\]
 ">"             return toks::langle;
 "+"             return toks::plus;
 "-"             return toks::minus;
-"*"             return toks::times;
+"*"             return toks::star;
 "/"             return toks::div;
 "//"            return toks::divfloor;
 "%"             return toks::percent;

@@ -32,3 +32,5 @@
 *.app
 
 **/lex.yy.c[p]*
+**/lexer_core.cpp
+**/lexer_core.h

@@ -1,22 +1,28 @@
 CPPC=c++
-# I'm working on my android phone in termux so these locations
-# will be pretty strange
+CC=cc
 INCLUDE=
 LIBS=
-CPPFLAGS=
-OUT=
+OPTLVL=2
+CPPFLAGS= -O$(OPTLVL) $(LIBS) $(INCLUDE)
+OUTBIN= fc
+LEXOUT= lexer_core.cpp lexer_core.h
+YACCOUT= ParserCore.c ParserCore.h
+OBJS=lexer_core.o parse.o parse_bison.o
 
-all: $(objs)
-	$(CPPC) lex.yy.cpp $^ $(CPPFLAGS)
+all: $(OBJS)
+	$(CPPC) -o $(OUTBIN) $(CPPFLAGS) $^ 
 
-%.o: lex_src, %.cpp
-	$(CPPC) -o $^ $(CPPFLAGS)
+%.o: %.cpp
+	$(CPPC) -o $@ -g $(CPPFLAGS) $^ 
 
-lex_src:
-	@reflex Fluster.l #-o
+lexer_core.o: lexer_core.cpp
+	$(CPPC) -o $@ -g $(CPPFLAGS) $^
+
+lexer_core.cpp:
+	reflex Fluster.l
 
 clean:
-	@rm *.o
+	rm -f *.o $(LEXOUT) $(YACCOUT)
 
 ultraclean: clean
-	@rm $(OUT)
+	rm $(OUT)
