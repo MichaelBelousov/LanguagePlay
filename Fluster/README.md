@@ -1,10 +1,8 @@
 
 # Fluster
 
-A general programming language with an emphasis on minimality
-(not in features) and abstraction.
-
-Maybe rename to JAPL? (Just A Programming Language) with the logo if an apple?
+A general programming language with an emphasis on density,
+core concepts, and abstraction.
 
 ## Introduction
 
@@ -70,7 +68,7 @@ dan = 0x6d696b6500000000000014: Person
 
 ```
 
-Fluster has pack-based uniform initialization
+Fluster has pack idioms
 
 ```TypeScript
 
@@ -88,7 +86,6 @@ rest == [20, 4]
 mylist: List2D<T> = (1, 2), (), (0,), (4, 5, 8, 2)
 
 ```
-
 
 
 Fluster code has granular declarative composition
@@ -138,7 +135,8 @@ tran require_user_pass<target: Func,
             throw 403
     target <- _
 
-@require_user_pass<"bad auth by {{usr}} when searching {{id}}">
+@require_user_pass<"bad auth by {{usr}} 
+                    when searching {{id}}">
 func search_user(id: String)
     ...
 
@@ -149,7 +147,9 @@ functions, transform others, or even ignore other people's
 demented casing choices.
 
 ```TypeScript
+
 aclass, b_class, cClass = import gross.bile
+
 ```
 
 What gross inconsistency, we can patch that module
@@ -175,5 +175,3 @@ a_class, b_class, c_class = @bile_fix import gross.bile
 import gross.bile
 
 ```
-
-<!-- how should we handle transformers on import statements? -->

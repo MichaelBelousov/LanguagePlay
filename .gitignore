@@ -30,3 +30,5 @@
 *.exe
 *.out
 *.app
+
+**/lex.yy.c[p]*

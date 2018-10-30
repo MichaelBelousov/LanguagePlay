@@ -32,6 +32,8 @@ Should be ideally syntactic sugar for a transformer applied to a namespace
 
 ```TypeScript
 
+// tt should really run the scope as code for construction
+
 malloc, copy, free = import
 
 tran struct<Target: Type>

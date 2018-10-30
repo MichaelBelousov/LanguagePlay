@@ -4,21 +4,18 @@
 
 /* Defs */
 
+/*
 {%
 #include <stdio.h>
 %}
-
 %option noyywrap
-%option c++
+*/
 
 ident               [_a-zA-Z][_a-zA-Z0-9]*
-string_content      [.|\n]*[^\]
+string_content      [.|\n]*[^\\]
 
 %%
-/*** Rules ***/
 
-{ident} {
-}
 
 /*** operators ***/
 
@@ -77,78 +74,56 @@ string_content      [.|\n]*[^\]
 ","             return op_comma
 "=>"            return op_bigrarrow
 "?"             return op_ques
-"if"            return stmt_if
-"else"          return stmt_else
-"elif"          return stmt_elif
-"for"           return stmt_for
-"while"         return stmt_while
-"until"         return stmt_until
-"try"           return stmt_try
-"catch"         return stmt_catch
-"throw"         return stmt_throw
-"with"          return stmt_with
-"struct"        return stmt_struct
-"class"         return stmt_class
-"const"         return stmt_const
-"typeof"        return stmt_typeof
-"cloneof"       return stmt_cloneof
-"import"        return stmt_import
+"if"            return keyword_if
+"else"          return keyword_else
+"elif"          return keyword_elif
+"for"           return keyword_for
+"while"         return keyword_while
+"until"         return keyword_until
+"try"           return keyword_try
+"catch"         return keyword_catch
+"throw"         return keyword_throw
+"with"          return keyword_with
+"struct"        return keyword_struct
+"class"         return keyword_class
+"const"         return keyword_const
+"typeof"        return keyword_typeof
+"cloneof"       return keyword_cloneof
+"import"        return keyword_import
+
+
+{ident} {
+}
 
 /*** literals ***/
 
 /* int literals */
--?[1-9][0-9]* {
-}
+-?[1-9][0-9]*   return lit_int
 
 /* float literal */
-(-?[1-9][0-9]*\.[0-9+])([Ee][+-?][1-9][0-9]*)? {
-}
+(-?[1-9][0-9]*\.[0-9+])([Ee][+-?][1-9][0-9]*)?  return lit_float
 
 /* byte literals */
-0x[0-9a-fA-F] {
-}
+0x[0-9a-fA-F]   return lit_byte
 
 /* bit literal */
-0b[01] {
-}
+0b[01]  return lit_bit
 
 /* octal literal */
-0o[0-7] {
-}
+0o[0-7]     return lit_octal
 
 /* string literal */
-\"{string_content}\" {
-}
+\"{string_content}\"    return lit_str
 
 /* raw string literal */
-\`{string_content}\` {
-}
-
-/* lbrack */
-"[" {
-}
-
-/* rbrack */
-"]" {
-}
-
+\`{string_content}\`    return lit_strraw
 
 /* */
 
 
 %%
 
-void* setUpBuffer(char const* text)
-{
-    YY_BUFFER_STATE buffer  = yy_scan_string(text);
-    yy_switch_to_buffer(buffer);
-
-    return buffer;
-}
-
-void tearDownBuffer(void* buffer)
-{
-    yy_delete_buffer((YY_BUFFER_STATE)buffer);
+Lexeme emit {
 }
 
 int main()
