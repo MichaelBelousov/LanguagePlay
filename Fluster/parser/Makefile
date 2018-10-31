@@ -24,8 +24,8 @@ CFLAGS= -O$(OPTLVL) $(LIBS) $(INCLUDE)
 # generator vars
 LEXNAME= lexer_core
 YACCNAME= parser_core
-LEXOUT= lexer_core.cpp lexer_core.h
-YACCOUT= parser_core.c parser_core.h
+LEXOUT= lexer_core.cpp lexer_core.h lex.yy.cpp lex.yy.c
+YACCOUT= parser_core.c parser_core.h Fluster.tab.c
 
 
 ###########################
