@@ -1,7 +1,7 @@
 
 /* Defs */
 
-%o outfile="lexer_core.cpp" header-file="lexer_core.h"
+/*%o outfile="lexer_core.cpp" header-file="lexer_core.h"*/
 %o reentrant 
 %o noyywrap 
 %o never-interactive 

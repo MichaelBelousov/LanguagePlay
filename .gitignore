@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# generated source
 **/lex.yy.c[p]*
-**/lexer_core.cpp
 **/lexer_core.h
+**/lexer_core.cpp
+**/parser_core.h
+**/parser_core.cpp
+**/Fluster.tab.c
