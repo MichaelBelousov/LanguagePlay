@@ -7,10 +7,12 @@
 
 %{
   #include <stdio.h>
-  #include <math.h>
+  #include <cmath.h>
   #include <ctype.h>
+  extern "C" int yylex();
+  extern "C" int yyparse();
+  extern "C" FILE* yyin;
   void yyerror(char const *);
-  int yylex(void);
 
   /*
   double add(double, double);
@@ -51,15 +53,8 @@
 %define api.value.type {double}
 
 %token NUM
+
 /* ops */
-/*
-%token PLUS 
-%token DASH
-%token STAR 
-%token FSLASH 
-%token TWOFSLASH 
-%token CARET
-*/
 %left PLUS DASH               /*|   + -       |*/
 %left STAR FSLASH TWOFSLASH   /*|   * / //    |*/
 %right CARET CARETFSLASH      /*|   ^ ^/      |*/
@@ -100,8 +95,37 @@ lambda:
   caplist arglist BIGRARROW expr    {}
   ;
 
+commalistaux: 
+  expr
+  | commalistaux ','
+  ;
+commalist: 
+  commalistaux 
+  | expr
+  ;
+trailingcommalist:
+  commalist ','
+  ;
+
+callarglist: '(' commalist ')'
+pramarglist: '<' commalist '>'
+
 class:
-  CLASS IDENT arglist NEWLINE
+  CLASS decl NEWLINE
+;
+
+struct:
+  STRUCT decl NEWLINE
+;
+
+function:;
+method:;
+assert:;
+struct:;
+    
+decl:
+  IDENT pramarglist
+  | IDENT;
   
 
 %%

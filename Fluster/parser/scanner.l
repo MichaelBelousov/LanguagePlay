@@ -6,21 +6,24 @@
 %o bison
 
 %top{
-    #include "y.tab.h"
-    #define YY_EXTERN_C extern "C"
+  /*#include "y.tab.h"*/
+  #define YY_EXTERN_C extern "C"
+  #define YYSTYPE int
+  #include "parser.h"
 %}
 
 %class{
-    int block_step;
-    bool block_step_set;
-    int current_depth;
-    //line_depth //(for string dedenting)
+  static const int tab_width = 2;
+  int scope_depth;
+  private:
+    int column;
+  public:
+    setColumn(int in_col);
 %}
 
 %init{
-    block_step = 0;
-    block_step_set = false;
-    current_depth = 0;
+  scope_depth = 0;
+  column = 1;
 %}
 
 ident               [_a-zA-Z][_a-zA-Z0-9]*
@@ -33,13 +36,21 @@ decint              {decnum_start}{digit}*
 any                 .|\n
 string_content      {any}*[^\\]
 
+/*** States ***/
+
+%x <Start>
+%x <ScanIndent>
+%x <Normal>
+
 %%
 
 /*** indentation ***/
 
 \n      return toks::newline;
 \t      return toks::tab;
-^" "*   return toks::indent_space;
+^" "*   return toks::space;
+^\h*\i  return toks::indent;
+^\h*\j  return toks::outdent;
 
 /*** operators ***/
 
