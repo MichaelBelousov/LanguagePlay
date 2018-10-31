@@ -93,7 +93,16 @@ exp:
 | exp CARETFSLASH exp         { $$ = pow($3, 1/$1);     }
 | CARETFSLASH exp %prec UNARY { $$ = sqrt($2);          }
 | '(' exp ')'                 { $$ = $2;                }
+| lambda                      {}
 ;
+
+lambda: 
+  caplist arglist BIGRARROW expr    {}
+  ;
+
+class:
+  CLASS IDENT arglist NEWLINE
+  
 
 %%
 

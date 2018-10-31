@@ -2,16 +2,12 @@
 /* Defs */
 
 /*%o outfile="lexer_core.cpp" header-file="lexer_core.h"*/
-%o reentrant 
 %o noyywrap 
-%o never-interactive 
-%o nounistd
-%o bison-bridge
+%o bison
 
 %top{
-#include <string>
-#include <memory>
-#include "parse.h"
+    #include "y.tab.h"
+    #define YY_EXTERN_C extern "C"
 %}
 
 %class{
