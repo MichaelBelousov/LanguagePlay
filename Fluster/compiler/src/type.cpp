@@ -4,14 +4,25 @@
 namespace Fluster {
 
 
+
+
 //void compile(const AST&);
 
 bool operator==(const Type& lhs, const Type& rhs)
 { return lhs.id == rhs.id; }
+
 bool operator!=(const Type& lhs, const Type& rhs);
 { return !(lhs == rhs); }
 
-Type operator&(const Type& lhs, const Type& rhs);
+Type operator&(const Type& lhs, const Type& rhs)
+{
+    //XXX: T&U should be a unique type determined by T&U
+    return Type({},{}
+                intersection(lhs.inst_props,
+                             rhs.inst_props),
+                intersection(lhs.type_props,
+                             rhs.type_props));
+}
 
 Type operator|(const Type& lhs, const Type& rhs);
 
