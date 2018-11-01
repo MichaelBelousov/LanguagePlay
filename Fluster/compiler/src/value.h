@@ -1,4 +1,7 @@
 
+#ifndef FLUSTER_COMPILER_VALUE_H
+#define FLUSTER_COMPILER_VALUE_H
+
 /*
  * this doesn't know what it's doing yet
  * */
@@ -27,3 +30,5 @@ struct Defaulted
     const T const* value;
     const get() { return value == null}
 };
+
+#endif //FLUSTER_COMPILER_VALUE_H

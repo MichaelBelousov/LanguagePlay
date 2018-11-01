@@ -1,4 +1,7 @@
 
+#ifndef FLUSTER_COMPILER_TYPE_H
+#define FLUSTER_COMPILER_TYPE_H
+
 /*
  * this doesn't know what it's doing yet
  * */
@@ -8,26 +11,40 @@
 #include <utility>
 #include <tuple>
 #include <map>
+#include "value.h"
 
 namespace Fluster {
 
+struct Type;
 
 //void compile(const AST&);
 
+struct Property
+{
+    using std::string;
+    string name;
+    Type& type;
+    Property(const string& in_name, const Type& in_type)
+        : name(in_name), type(in_type) {}
+};
+
 struct Type  //: Public Parametric
 {
+public:  //types
     using std::vector; using std::map;
     using std::tuple;
+    using Ptr = std::shared_ptr<Type>;
+    using Properties = vector<Properties>
+
 private: //class variables
     static int next_id = 0;
     static const Type MetaType;
 
-public:  //class types
-    using Ptr = std::shared_ptr<Type>;
-
 public:  //members
     const int id;
     vector<Type::Ptr> convertible_from;
+    Properties props;
+    Properties class_props;
 
 public: //construction
     Type()  //T: Type
@@ -74,9 +91,33 @@ public:  //Methods
 
 Type::MetaType = Type();
 
+struct Array 
+{
+    Type& type;
+    int size;
+};
+
 namespace builtin
 {
     namespace types {
+        Type int_;
+        Type int8;
+        Type uint8;
+        Type int16;
+        Type uint16;
         Type int32;
+        Type uint32;
+        Type int64;
+        Type uint64;
+
+        Type float_;
+        Type float32;
+        Type float64;
+
+        Type bool_;
+        Type byte_;
+        Type bit_;
     };
 };
+
+#endif //FLUSTER_COMPILER_TYPE_H

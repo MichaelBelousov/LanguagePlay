@@ -1,4 +1,7 @@
 
+#ifndef FLUSTER_COMPILER_FRONTEND_H
+#define FLUSTER_COMPILER_FRONTEND_H
+
 /*
  * this doesn't know what it's doing yet
  * */
@@ -48,3 +51,4 @@ int main()
 }
 
 
+#endif //FLUSTER_COMPILER_FRONTEND_H
