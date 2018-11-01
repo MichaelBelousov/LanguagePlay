@@ -1,15 +1,13 @@
-## LanguagePlay
+# LanguagePlay
 
-### fantasy sources of hypothetical programming languages.
+### ~~fantasy~~ sources of hypothetical programming languages.
 
-Seriously, this is just a playground for imaginary language features,
-just random scratch and scribble ultimately about exploring the limits
-of expressiveness in programming languages.
 
 # Fluster
 
-A hyper-level programming language with a focus on static constructs,
-powerful simplicity, and expressiveness.
+A programming language that attempts to learn from C++, Python,
+and Typescript, while being its own, with a practically non-existent
+Lex+Bison+LLVM compiler. See (the sub-README)[Fluster.README.md].
 
-I'm just writing a complete documentation before beginning a compiler
-that would likely take advantage of the LLVM toolchain.
+Hopefully minimal but dense in core features, with a focus on
+uniformity and infinite abstraction.
