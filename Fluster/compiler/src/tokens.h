@@ -22,14 +22,12 @@ namespace toks {
     using TokenType = int;
 
     namespace spc { enum spc {
-        newline,
-        tab,
-        indentspace,
-        backslash
+        indent,
+        outdent
     }; };
 
-    namespace { enum ops {
-        rangle = spc::backslash+1,
+    namespace ops { enum ops {
+        rangle = spc::outdent+1,
         langleeq,
         doubleeq,
         hasheq,
@@ -83,7 +81,7 @@ namespace toks {
         ques,
     }; };
 
-    namespace { enum kwords {
+    namespace kwords { enum kwords {
         in_ = ops::ques+1,
         contains_,
         assert_,
@@ -107,7 +105,7 @@ namespace toks {
         export_,
     }; };
 
-    namespace { enum lits {
+    namespace lits { enum lits {
         int_ = kwords::export_+1,
         float_,
         byte_,

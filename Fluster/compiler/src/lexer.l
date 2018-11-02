@@ -1,10 +1,6 @@
 
 /* Defs */
 
-/*%o outfile="lexer.cpp" header-file="lexer.h"*/
-%o noyywrap 
-%o bison
-
 %top{
   #define YY_EXTERN_C extern "C"
   #define YYSTYPE int
@@ -25,6 +21,9 @@
   column = 1;
 %}
 
+/*** Definitions ***/
+
+
 ident               [_a-zA-Z][_a-zA-Z0-9]*
 digit               [0-9]
 bit                 [01]
@@ -35,21 +34,27 @@ decint              {decnum_start}{digit}*
 any                 .|\n
 string_content      {any}*[^\\]
 
-/*** States ***/
 
-%x <Start>
-%x <ScanIndent>
-%x <Normal>
+/*** Options***/
 
+%o debug
+
+%o outfile="lexer.cpp" header-file="lexer.h"
+%o yylineno
+%o bison
+
+%o tabs 4
+
+
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
 %%
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
 
-/*** indentation ***/
 
-\n      return toks::spc::newline;
-\t      return toks::spc::tab;
-^" "*   return toks::spc::space;
-^\h*\i  return toks::spc::indent;
-^\h*\j  return toks::spc::outdent;
 
 /*** operators ***/
 
@@ -150,21 +155,52 @@ string_content      {any}*[^\\]
 /* string literal */
 \"{string_content}\"                        return toks::lits::string_;
 
+/* unicode literal */
+u\"(?u:{string_content})\"                       return toks::lits::string_unicode_;
+
 /* raw string literal */
 \`{string_content}\`                        return toks::lits::string_raw_;
 
+
+
+/*** miscellanious ***/
+
+
 /* multiline comment */
-"/*"(.|\n)*?"*/"                            return 0;
+"/*"(.|\n)*?"*/"                            //ignore
 
 /* eol comment */
-"//".*                                      return 0;
+"//".*                                      //ignore
 
 /* eof */
-<<EOF>>                                     return 0;
+<<EOF>>                                     return -1;
 
+
+
+/*** indentation ***/
+
+^\h*\i          return toks::spc::indent;
+
+^\h*\j          return toks::spc::outdent;
+
+\j              return toks::spc::outdent;
+
+(?^\\\n\h*)     //ignore space after line-end backslash
+
+"\\"            return toks::spc::indent; //add indent after in-line backslash
+
+
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
 %%
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
+/* ********************************************************************************** */ 
+
 
 int main()
 {
     return Lexer().lex();
 }
+
