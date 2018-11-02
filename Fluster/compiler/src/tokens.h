@@ -27,16 +27,16 @@ namespace toks {
     }; };
 
     namespace ops { enum ops {
-        rangle = spc::outdent+1,
+        langle = spc::outdent+1,
         langleeq,
         doubleeq,
         hasheq,
-        tildeeq,
         langleeqrangle,
         tilde,
+        tildetilde,
         bangeq,
         rangleeq,
-        langle,
+        rangle,
         plus,
         dash,
         star,
@@ -45,28 +45,28 @@ namespace toks {
         percent,
         caret,
         caretfslash,
-        type,
         has,
         is,
         ampersand,
         pipe,
-
         doublerangle,
         doublelangle,
         dashrangle,
         eq,
         pluseq,
-        dashwq,
+        dasheq,
         stareq,
-        fslashwq,
+        fslasheq,
         doublefslasheq,
-        careteq,
         caretfslasheq,
+        careteq,
         ampersandeq,
         pipeeq,
+        tildeeq,
         doublerangleeq,
         doublelangleeq,
         dashrangleeq,
+        dollar,
         langledash,
         dotdotdot,
         lbrack,
@@ -78,7 +78,8 @@ namespace toks {
         dot,
         comma,
         eqrangle,
-        ques,
+        colon,
+        ques
     }; };
 
     namespace kwords { enum kwords {
@@ -112,7 +113,8 @@ namespace toks {
         bit_,
         octal_,
         string_,
-        string_raw_
+        string_raw_,
+        string_unicode_
     }; };
 };
 

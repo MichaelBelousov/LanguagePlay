@@ -9,50 +9,26 @@
   #include <stdio.h>
   #include <cmath.h>
   #include <ctype.h>
-  extern "C" int yylex();
+  extern "C" int yylex(void);
   extern "C" int yyparse();
   extern "C" FILE* yyin;
   void yyerror(char const *);
-
-  /*
-  double add(double, double);
-  double sub(double, double);
-  double neg(double);
-  double mul(double, double);
-  double div(double, double);
-  double divfloor(double, double);
-  double exp_(double);
-  double pow_(double, double);
-  double root(double, double);
-  double sqrt_(double);
-
-  //enum op_toks { PLUS, STAR, DASH, FSLASH, CARET };
-
-  const struct {char*, int} bops[]
-  { 
-    {"+", PLUS}, 
-    {"-", DASH}, 
-    {"*", STAR}, 
-    {"/", FSLASH}, 
-    {"//", TWOFSLASH}, 
-    {"^", CARET}, 
-    {"^/", CARETFSLASH}, 
-  };
-
-  const struct {char*, double(*)(double)} uops[]
-  { 
-    {"-", DASH}, 
-    {"^", CARET}, 
-    {"^/", CARETFSLASH}, 
-  };
-  */
-
 %}
 
 /*%define api.pure full*/
-%define api.value.type {double}
+/*%define api.value.type {double}*/
 
-%token NUM
+%union {
+    long long   integer;
+    long double floating;
+    char*       bytes;
+}
+
+/* tokens */
+
+%token <integer> INTEGER
+%token <floating> FLOATING
+%token <bytes> BYTES
 
 /* ops */
 %left PLUS DASH               /*|   + -       |*/

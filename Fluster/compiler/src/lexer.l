@@ -2,7 +2,10 @@
 /*** RE/flex Preamble ***/
 
 %top{
+  #include <cmath>
   #include "tokens.h"
+  #include "parser.h"
+  #define YY_EXTERN_C extern "C"
 %}
 
 %class{
@@ -31,7 +34,9 @@ string_content      {any}*[^\\]
 
 %o outfile="lexer.cpp" header-file="lexer.h"
 %o yylineno
+%o noyywrap
 %o bison
+//%o flex
 
 %o tabs=4
 
@@ -48,62 +53,64 @@ string_content      {any}*[^\\]
 
 /*** operators ***/
 
-"<"             return toks::ops::rangle;
-"<="            return toks::ops::lteq;
-"=="            return toks::ops::eq;
-"#="            return toks::ops::ptreq;
-"<=>"           return toks::ops::spaceship;
-"~="            return toks::ops::approxeq;
-"~"             return toks::ops::similar;
-"!="            return toks::ops::neq;
-">="            return toks::ops::gteq;
-">"             return toks::ops::langle;
+"<"             return toks::ops::langle;
+"<="            return toks::ops::langleeq;
+"=="            return toks::ops::doubleeq;
+"#="            return toks::ops::hasheq;
+"<=>"           return toks::ops::langleeqrangle;
+"~"             return toks::ops::tilde;
+"~~"            return toks::ops::tildetilde;
+"!="            return toks::ops::bangeq;
+">="            return toks::ops::rangleeq;
+">"             return toks::ops::rangle;
 "+"             return toks::ops::plus;
-"-"             return toks::ops::minus;
+"-"             return toks::ops::dash;
 "*"             return toks::ops::star;
-"/"             return toks::ops::div;
-"//"            return toks::ops::divfloor;
+"/"             return toks::ops::fslash;
+"//"            return toks::ops::doublefslash;
 "%"             return toks::ops::percent;
-\<mod\>         return toks::ops::mod;
-"^^"            return toks::ops::pow;
-"^/"            return toks::ops::root;
-":"             return toks::ops::type;
+"^"             return toks::ops::caret;
+"^/"            return toks::ops::caretfslash;
 \<has\>         return toks::ops::has;
 \<is\>          return toks::ops::is;
-"&"             return toks::ops::and_;
-"|"             return toks::ops::or_;
-"^"             return toks::ops::xor_;
-">>"            return toks::ops::rshift;
-"<<"            return toks::ops::lshift;
-"->"            return toks::ops::implies;
-"="             return toks::ops::assign;
-"+="            return toks::ops::assignplus;
-"-="            return toks::ops::assignminus;
-"*="            return toks::ops::assigntimes;
-"/="            return toks::ops::assigndiv;
-"//="           return toks::ops::assigndivfloor;
-"^^="           return toks::ops::assignpow;
-"^/="           return toks::ops::assignroot;
-"&="            return toks::ops::assignand;
-"|="            return toks::ops::assignor;
-">>="           return toks::ops::assignrshift;
-"<<="           return toks::ops::assignlshift;
-"->="           return toks::ops::assignimplies;
-"$"             return toks::ops::assign;
-"<-"            return toks::ops::larrow;
-"..."           return toks::ops::ellipse;
+"&"             return toks::ops::ampersand;
+"|"             return toks::ops::pipe;
+">>"            return toks::ops::doublerangle;
+"<<"            return toks::ops::doublelangle;
+"->"            return toks::ops::dashrangle;
+"="             return toks::ops::eq;
+"+="            return toks::ops::pluseq;
+"-="            return toks::ops::dasheq;
+"*="            return toks::ops::stareq;
+"/="            return toks::ops::fslasheq;
+"//="           return toks::ops::doublefslasheq;
+"^/="           return toks::ops::caretfslasheq;
+"^="            return toks::ops::careteq;
+"&="            return toks::ops::ampersandeq;
+"|="            return toks::ops::pipeeq;
+"~="            return toks::ops::tildeeq;
+">>="           return toks::ops::doublerangleeq;
+"<<="           return toks::ops::doublelangleeq;
+"->="           return toks::ops::dashrangleeq;
+"$"             return toks::ops::dollar;
+"<-"            return toks::ops::langledash;
+"..."           return toks::ops::dotdotdot;
 "["             return toks::ops::lbrack;
 "]"             return toks::ops::rbrack;
+"{"             return toks::ops::lbrace;
+"}"             return toks::ops::rbrace;
 "("             return toks::ops::lpar;
 ")"             return toks::ops::rpar;
 "."             return toks::ops::dot;
 ","             return toks::ops::comma;
-"=>"            return toks::ops::bigrarrow;
+"=>"            return toks::ops::eqrangle;
+":"             return toks::ops::colon;
 "?"             return toks::ops::ques;
 
-\<in\>          return toks::kwords::in;
-\<contains\>    return toks::kwords::contains;
-\<assert\>      return toks::kwords::assert;
+\<in\>          return toks::kwords::in_;
+\<contains\>    return toks::kwords::contains_;
+\<assert\>      return toks::kwords::assert_;
+\<mod\>         return toks::kwords::mod_;
 \<if\>          return toks::kwords::if_;
 \<else\>        return toks::kwords::else_;
 \<elif\>        return toks::kwords::elif_;
@@ -128,19 +135,105 @@ string_content      {any}*[^\\]
 /*** literals ***/
 
 /* int literals */
-{decint}                                    return toks::lits::int_;
+{decint}                                    {
+                                                yylval.integer = strtoll(text(), NULL, 10);
+                                                return toks::lits::int_;
+                                            }
 
 /* float literal */
-{decint}(\.{digit}+)?([Ee][+-]?{decint})?   return toks::lits::float_;
+{decint}(\.{digit}+)?([Ee][+-]?{decint})?   {   
+                                                yylval.floating = strtold(text(), NULL);
+                                                return toks::lits::float_;
+                                            }
 
 /* byte literals */
-0x{hex}*                                    return toks::lits::byte_;
+0x{hex}*    {
+    char bytes[] = new char[ceil((strlen(text())-2)/2.0)];
+    bool do_load = false; //could move this to the oddness of i
+    char byte;
+    for (int i = 0; p[i]; ++i, commit = !commit) 
+    { 
+        char val;
+        if (do_load) {  //we're loading the first hex numeral
+            if (p[i] <= 57) //is an ascii number
+                val = p[i] - 48;
+            else            //is an ascii letter
+                val = (p[i] | (1<<5)) - 87;
+            byte = val;
+        }
+        else {
+            if (p[i] <= 57) //is an ascii number
+                val = p[i] - 48
+            else            //is an ascii letter
+                val = (p[i] | (1<<5)) - 87;
+            byte |= val << 4    //add the more significant nibble
+            bytes[i/2] = byte;  //relying on floor division
+        }
+        
+    }
+    yylval.bytes = bytes;
+    return toks::lits::byte_;
+}
 
 /* bit literal */
-0b{bit}*                                    return toks::lits::bit_;
+0b{bit}*    {
+    //FIXME: untested and I may have loaded the byte stream backwards
+    //just use rshift and reverse the process. Maybe make all this
+    //repetitive code into a procedure, too
+    char bytes[] = new char[ceil((strlen(text())-2)/8.0)];
+    char byte;
+    //TODO: replace depthmax literal with constexpr var
+    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
+    { 
+        byte |= (p[i] - 48) << depth;
+        //TODO: package in a lambda for reuse
+        if (depth == 7) {
+            bytes[i/2] = byte; //relying on floor division
+            byte = 0;
+        }
+    }
+    if (depth) {
+        bytes[i/2] = byte; //relying on floor division
+        byte = 0;
+    }
+    yylval.bytes = bytes;
+    return toks::lits::bit_;
+}
 
 /* octal literal */
-0o{octal}                                   return toks::lits::octal_;
+0o{octal}   {
+    //FIXME: untested and I may have loaded the byte stream backwards
+    //TODO: account for endianness
+    char bytes[] = new char[ceil((strlen(text())-2)/3.0)];
+    char* head = bytes;
+    char word[4];  //32 bit buffer for 24 bit chunks
+    int& wordval = reinterpret_cast<int&>(&wordbyte);
+    //TODO: replace depthmax literal with constexpr var
+    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
+    { 
+        //TODO: package in a lambda for reuse
+        wordval |= (p[i] - 48) << depth*3;
+        if (depth == 7) {
+            head[i] = word[0];
+            head[i+1] = byte;
+            head[i+2] = byte;
+            byte = 0;
+            wordval = 0;
+            head += 3;
+        }
+    }
+    //FIXME: optimize using a lambda or (god-forbid) a **label+goto**
+    if (depth) {
+        head[i] = word[0];
+        head[i+1] = byte;
+        head[i+2] = byte;
+        byte = 0;
+        wordval = 0;
+        head += 3;
+    }
+    yylval.bytes = bytes;
+    return toks::lits::byte_;
+}
 
 /* string literal */
 \"{string_content}\"                        return toks::lits::string_;
