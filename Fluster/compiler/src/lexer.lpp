@@ -5,7 +5,6 @@
   #include <cmath>
   #include "tokens.h"
   #include "parser.h"
-  #define YY_EXTERN_C extern "C"
 %}
 
 %class{
@@ -33,10 +32,14 @@ string_content      {any}*[^\\]
 %o debug
 
 %o outfile="lexer.cpp" header-file="lexer.h"
+%o namespace=yy
+%o lexer=Lexer
+%o lex=yylex
 %o yylineno
 %o noyywrap
 %o bison
-//%o flex
+%o reentrant
+/*%o bison-bridge*/
 
 %o tabs=4
 
@@ -239,7 +242,7 @@ string_content      {any}*[^\\]
 \"{string_content}\"                        return toks::lits::string_;
 
 /* unicode literal */
-u\"(?u:{string_content})\"                       return toks::lits::string_unicode_;
+u\"(?u:{string_content})\"                  return toks::lits::string_unicode_;
 
 /* raw string literal */
 \`{string_content}\`                        return toks::lits::string_raw_;

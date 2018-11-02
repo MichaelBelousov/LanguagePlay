@@ -1,0 +1,148 @@
+
+/* Fluster Bison Grammar */
+
+/***********
+ Definitions
+ ***********/
+
+%skeleton "lalr1.cc"
+%require "3.0"
+
+%{
+  #include <stdio.h>
+  #include <cmath.h>
+  #include <ctype.h>
+%}
+
+%code requires{
+  namespace yy {
+    class Lexer;
+  }
+}
+
+%parse-param { yy::Lexer& lexer }
+
+%code{
+  #include "lexer.h"
+  #undef yylex
+  #define yylex lexer.yylex
+%}
+
+/*%define api.pure full*/
+
+%union {
+    long long   integer;
+    long double floating;
+    char*       bytes;
+}
+
+/* tokens */
+
+%token <integer> INTEGER
+%token <floating> FLOATING
+%token <bytes> BYTES
+%token <bytes> BITS
+%token CLASS
+%token STRUCT
+%token IDENT
+%token EQRANGLE
+
+/* ops */
+/* %left PLUS DASH               /*|   + -       |*/
+/* %left STAR FSLASH TWOFSLASH   /*|   * / //    |*/
+/* %right CARET CARETFSLASH      /*|   ^ ^/      |*/
+/* %precedence UNARY             /*|   ^ ^/ -    |*/
+
+%%
+
+/**************************
+ Grammer Rules and Actions
+ **************************/
+
+input: 
+     %empty | input line ;
+
+line:
+  '\n' 
+| exp '\n'      {                           }
+| error '\n'    { yyerrok;                  } 
+;
+
+exp:
+  INTEGER
+| FLOATING
+| BYTES
+| BITS
+/*
+| exp PLUS exp                
+| exp DASH exp              
+| DASH exp %prec UNARY     
+| exp STAR exp            
+| exp FSLASH exp         
+| exp TWOFSLASH exp     
+| exp CARET exp        
+| CARET exp %prec UNARY
+| exp CARETFSLASH exp
+| CARETFSLASH exp %prec UNARY
+| '(' exp ')'
+| lambda
+;
+*/
+
+lambda: 
+  caparglist callarglist EQRANGLE exp
+  ;
+
+commalistaux: 
+  exp
+  | commalistaux ','
+  ;
+commalist: 
+  commalistaux 
+  | exp
+  ;
+trailingcommalist:
+  commalist ','
+  ;
+
+caparglist:  '[' commalist ']'
+callarglist: '(' commalist ')'
+pramarglist: '<' commalist '>'
+set_lit:     '{' commalist '}'
+
+class:
+  CLASS decl
+;
+
+struct:
+  STRUCT decl
+;
+
+function: %empty;
+method: %empty;
+assert: %empty;
+    
+decl:
+  IDENT pramarglist
+  | IDENT;
+  
+
+%%
+
+/****************
+ Additional Code
+ ****************/
+
+void yy::parser::error(const location_type& loc, const std::string& msg)
+{
+    std::cerr << msg << " at " << loc << std::endl;
+}
+
+/*
+int main(void)
+{
+  return yyparse();
+}
+*/
+
+
