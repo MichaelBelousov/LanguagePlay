@@ -47,13 +47,13 @@ lexer_core.o: lexer_core.cpp
 	$(CPPC) -o $@ -g $(CPPFLAGS) $^
 
 lexer_core.cpp:
-	reflex Fluster.l
+	reflex lexer.l
 
 parser_core.o:
 	$(CPPC) -o $@ -g $(CPPFLAGS) $^
 
 parser_core.cpp:
-	bison Fluster.y
+	bison parser.y
 
 
 ####### Utility Rules

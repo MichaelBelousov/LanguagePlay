@@ -1,6 +1,7 @@
 
-#ifndef FLUSTER_LEXER_PARSE_H
-#define FLUSTER_LEXER_PARSE_H
+#ifndef FLUSTER_LEXER_TOKENS_H
+#define FLUSTER_LEXER_TOKENS_H
+
 #include <string>
 #include <memory>
 
@@ -23,68 +24,71 @@ namespace toks {
     namespace spc { enum spc {
         newline,
         tab,
-        indent_space
+        indentspace,
+        backslash
     }; };
 
     namespace { enum ops {
-        rangle = indent_space+1,
-        lteq,
-        eq,
-        ptreq,
-        approxeq,
-        spaceship,
-        similar,
-        neq,
-        gteq,
+        rangle = spc::backslash+1,
+        langleeq,
+        doubleeq,
+        hasheq,
+        tildeeq,
+        langleeqrangle,
+        tilde,
+        bangeq,
+        rangleeq,
         langle,
         plus,
-        minus,
+        dash,
         star,
-        div,
-        divfloor,
+        fslash,
+        doublefslash,
         percent,
-        mod,
-        pow,
-        root,
+        caret,
+        caretfslash,
         type,
         has,
         is,
-        and_,
-        or_,
-        xor_,
-        rshift,
-        lshift,
-        implies,
-        assign,
-        assignplus,
-        assignminus,
-        assigntimes,
-        assigndiv,
-        assigndivfloor,
-        assignpow,
-        assignroot,
-        assignand,
-        assignor,
-        assignrshift,
-        assignlshift,
-        assignimplies,
-        larrow,
-        ellipse,
-        in,
-        contains,
-        assert,
+        ampersand,
+        pipe,
+
+        doublerangle,
+        doublelangle,
+        dashrangle,
+        eq,
+        pluseq,
+        dashwq,
+        stareq,
+        fslashwq,
+        doublefslasheq,
+        careteq,
+        caretfslasheq,
+        ampersandeq,
+        pipeeq,
+        doublerangleeq,
+        doublelangleeq,
+        dashrangleeq,
+        langledash,
+        dotdotdot,
         lbrack,
         rbrack,
+        lbrace,
+        rbrace,
         lpar,
         rpar,
         dot,
         comma,
-        bigrarrow,
+        eqrangle,
         ques,
     }; };
 
     namespace { enum kwords {
-        if_ = ques+1,
+        in_ = ops::ques+1,
+        contains_,
+        assert_,
+        mod_,
+        if_,
         else_,
         elif_,
         for_,
@@ -100,11 +104,11 @@ namespace toks {
         typeof_,
         cloneof_,
         import_,
-        export_
+        export_,
     }; };
 
     namespace { enum lits {
-        int_ = export_+1,
+        int_ = kwords::export_+1,
         float_,
         byte_,
         bit_,
@@ -115,19 +119,4 @@ namespace toks {
 };
 
 
-/*
- * ideally parallelizable parser
- * */
-struct Parser
-{
-    struct Context
-    {
-    };
-    Context ctx;
-
-    void admitLexeme(const Lexeme& lexeme)
-    {
-    }
-};
-
-#endif //FLUSTER_LEXER_PARSE_H
+#endif //FLUSTER_LEXER_TOKENS_H
