@@ -1,24 +1,14 @@
 
-/* Defs */
+/*** RE/flex Preamble ***/
 
 %top{
-  #define YY_EXTERN_C extern "C"
-  #define YYSTYPE int
   #include "tokens.h"
 %}
 
 %class{
-  static const int tab_width = 2;
-  int scope_depth;
-  private:
-    int column;
-  public:
-    setColumn(int in_col);
 %}
 
 %init{
-  scope_depth = 0;
-  column = 1;
 %}
 
 /*** Definitions ***/
@@ -43,7 +33,7 @@ string_content      {any}*[^\\]
 %o yylineno
 %o bison
 
-%o tabs 4
+%o tabs=4
 
 
 /* ********************************************************************************** */ 
@@ -187,7 +177,7 @@ u\"(?u:{string_content})\"                       return toks::lits::string_unico
 
 (?^\\\n\h*)     //ignore space after line-end backslash
 
-"\\"            return toks::spc::indent; //add indent after in-line backslash
+\\              return toks::spc::indent; //add indent after in-line backslash
 
 
 /* ********************************************************************************** */ 

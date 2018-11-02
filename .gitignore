@@ -33,8 +33,8 @@
 
 # generated source
 **/lex.yy.c[p]*
-**/lexer_core.h
-**/lexer_core.cpp
-**/parser_core.h
-**/parser_core.cpp
+**/lexer.h
+**/lexer.cpp
+**/parser.h
+**/parser.cpp
 **/Fluster.tab.c
