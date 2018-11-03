@@ -108,6 +108,7 @@ string_content      {any}*[^\\]
 ","             return toks::ops::comma;
 "=>"            return toks::ops::eqrangle;
 ":"             return toks::ops::colon;
+"@"             return toks::ops::at;
 "?"             return toks::ops::ques;
 
 \<in\>          return toks::kwords::in_;
