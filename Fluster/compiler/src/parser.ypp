@@ -9,9 +9,13 @@
 %require "3.0"
 
 %{
+/*
   #include <stdio.h>
-  #include <cmath.h>
-  #include <ctype.h>
+  #include <cmath>
+  #include <ctype>
+*/
+  #include <iostream>
+  #define DEBUG
 %}
 
 %code requires{
@@ -34,18 +38,21 @@
     long long   integer;
     long double floating;
     char*       bytes;
+    std::string id;
 }
 
 /* tokens */
 
+%token <id> CLASS STRUCT FUNC
+%token EQRANGLE COMMA STAR MESSAGE COLON DOT
+%token <id> ID 
+%token LANGLE RANGLE LBRACK RBRACK LPAR RPAR LBRACE RBRACE
+%token INDENT OUTDENT
 %token <integer> INTEGER
 %token <floating> FLOATING
 %token <bytes> BYTES
 %token <bytes> BITS
-%token CLASS
-%token STRUCT
-%token IDENT
-%token EQRANGLE
+/*%start input*/
 
 /* ops */
 /* %left PLUS DASH               /*|   + -       |*/
@@ -64,15 +71,23 @@ input:
 
 line:
   '\n' 
-| exp '\n'      {                           }
+| any '\n'      {                           }
 | error '\n'    { yyerrok;                  } 
 ;
 
-exp:
+any:
+  lit
+| class_decl
+| struct_decl
+| func_decl;
+
+lit:
   INTEGER
 | FLOATING
 | BYTES
 | BITS
+;
+
 /*
 | exp PLUS exp                
 | exp DASH exp              
@@ -89,42 +104,53 @@ exp:
 ;
 */
 
+/*
 lambda: 
-  caparglist callarglist EQRANGLE exp
+  caparglist parlist EQRANGLE exp
+  ;
+*/
+
+commalist:
+  %empty
+  | commalist COMMA
+    /*{ $$ += $2; }*/
+  | commalist ID
+    /*{ $$ += $2; }*/
   ;
 
-commalistaux: 
-  exp
-  | commalistaux ','
-  ;
-commalist: 
-  commalistaux 
-  | exp
-  ;
-trailingcommalist:
-  commalist ','
-  ;
+parlist:    LPAR   commalist RPAR
+/*
+bracklist:  LBRACK commalist RBRACK
+bracelist:  LBRACE commalist RBRACE
+*/
+anglelist:  LANGLE commalist RANGLE
 
-caparglist:  '[' commalist ']'
-callarglist: '(' commalist ')'
-pramarglist: '<' commalist '>'
-set_lit:     '{' commalist '}'
-
-class:
-  CLASS decl
+class_decl:
+  CLASS decl INDENT
+  {
+    #ifdef DEBUG
+        //cout << "class:" << $2 << endl;
+    #endif
+  }
 ;
 
-struct:
-  STRUCT decl
+struct_decl:
+  STRUCT decl INDENT
 ;
 
-function: %empty;
+func_decl: 
+  FUNC decl parlist INDENT
+;
+
+/*
 method: %empty;
 assert: %empty;
+*/
     
 decl:
-  IDENT pramarglist
-  | IDENT;
+  ID
+  | ID anglelist
+;
   
 
 %%
