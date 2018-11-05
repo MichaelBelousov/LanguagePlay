@@ -5,60 +5,143 @@
  Definitions
  ***********/
 
+/* options */
+
 %skeleton "lalr1.cc"
-%require "3.0"
+%require "3.2"
 %output "parser.cpp"
 %defines "parser.h"
 
-/* options */
+/* C++ */
 
-/*%define api.pure full*/
+%define api.token.constructor
+%define api.value.type.variant
+%define parse.assert
 
 %{
   #include <iostream>
   #define DEBUG
 %}
 
-%code requires{
+%code requires {
+  #include <string>
+  class driver;
   namespace yy {
     class Lexer;
   }
 }
 
+%param { Driver& driver }
+%locations
+%define parse.trace
+%define parse.error verbose
+
 %parse-param { yy::Lexer& lexer }
 
 %code{
+  #include "driver.h"
   #include "lexer.h"
   #undef yylex
   #define yylex lexer.yylex
-%}
-
-
-%union {
-    long long   integer;
-    long double floating;
-    char*       bytes;
-    std::string id;
 }
+
 
 /* tokens */
 
-%token <id> CLASS STRUCT FUNC
+%define api.token.prefix {TOK_}
+%token
+    END     0       "end of file"
+    EQ              "="
+    LANGLE          "<"
+    LANGLEEQ        "<="
+    DOUBLEEQ        "=="
+    HASHEQ          "#="
+    LANGLEEQRANGLE  "<=>"
+    TILDE           "~"
+    TILDETILDE      "~~"
+    BANGEQ          "!="
+    RANGLEEQ        ">="
+    RANGLE          ">"
+    PLUS            "+"
+    DASH            "-"
+    STAR            "*"
+    FSLASH          "/"
+    DOUBLEFSLASH    "//"
+    PERCENT         "%"
+    CARET           "^"
+    CARETFSLASH     "^/"
+    HAS             "has"
+    IS              "is"
+    AMPERSAND       "&"
+    PIPE            "|"
+    DOUBLERANGLE    ">>"
+    DOUBLELANGLE    "<<"
+    DASHRANGLE      "->"
+    EQ              "="
+    PLUSEQ          "+="
+    DASHEQ          "-="
+    STAREQ          "*="
+    FSLASHEQ        "/="
+    DOUBLEFSLASHEQ  "//="
+    CARETFSLASHEQ   "^/="
+    CARETEQ         "^="
+    AMPERSANDEQ     "&="
+    PIPEEQ          "|="
+    TILDEEQ         "~="
+    DOUBLERANGLEEQ  ">>="
+    DOUBLELANGLEEQ  "<<="
+    DASHRANGLEEQ    "->="
+    DOLLAR          "$"
+    LANGLEDASH      "<-"
+    DOTDOTDOT       "..."
+    LBRACK          "["
+    RBRACK          "]"
+    LBRACE          "{"
+    RBRACE          "}"
+    LPAR            "("
+    RPAR            ")"
+    DOT             "."
+    COMMA           ","
+    EQRANGLE        "=>"
+    COLON           ":"
+    AT              "@"
+    QUES            "?"
+    IN              "in"
+    CONTAINS        "contains"
+    ASSERT          "assert"
+    MOD             "mod"
+    IF              "if"
+    ELSE            "else"
+    ELIF            "elif"
+    FOR             "for"
+    WHILE           "while"
+    UNTIL           "until"
+    TRY             "try"
+    CATCH           "catch"
+    THROW           "throw"
+    WITH            "with"
+    STRUCT          "struct"
+    CLASS           "class"
+    CONST           "const"
+    TYPEOF          "typeof"
+    CLONEOF         "cloneof"
+    IMPORT          "import"
+;
+
+%token <std::string> ID "id"
+%token <std::string> CLASS STRUCT FUNC
 %token EQRANGLE COMMA STAR MESSAGE COLON DOT
-%token <id> ID 
 %token LANGLE RANGLE LBRACK RBRACK LPAR RPAR LBRACE RBRACE
 %token INDENT OUTDENT
-%token <integer> INTEGER
-%token <floating> FLOATING
-%token <bytes> BYTES
-%token <bytes> BITS
-/*%start input*/
+%token <long long> INTEGER "integer"  /* switch to uint64_t */
+%token <double> FLOAT "float"
+/* TODO: use std::bitset or something */
+%token <char[]> BYTES "bytes"
+%token <char[]> BITS "bits"
+/*%type exp*/
 
-/* ops */
-/* %left PLUS DASH               /*|   + -       |*/
-/* %left STAR FSLASH TWOFSLASH   /*|   * / //    |*/
-/* %right CARET CARETFSLASH      /*|   ^ ^/      |*/
-/* %precedence UNARY             /*|   ^ ^/ -    |*/
+%printer { yyo << $$; } <*>;
+
 
 %%
 
@@ -66,18 +149,29 @@
  Grammer Rules and Actions
  **************************/
 
-input: 
-     %empty | input line ;
+%start input
 
-line:
+/* ops */
+/* %left PLUS DASH               /*|   + -       |*/
+/* %left STAR FSLASH TWOFSLASH   /*|   * / //    |*/
+/* %right CARET CARETFSLASH      /*|   ^ ^/      |*/
+/* %precedence UNARY             /*|   ^ ^/ -    |*/
+
+input:
+  %empty
+  | code input
+;
+
+code:
   '\n' 
-| any '\n'      {                           }
-| error '\n'    { yyerrok;                  } 
+  | any
+  | error '\n'    
+    { yyerrok; } 
 ;
 
 any:
   lit
-| class_decl
+| class
 | struct_decl
 | func_decl;
 
@@ -120,18 +214,24 @@ commalist:
 
 parlist:    LPAR   commalist RPAR
 /*
+//not used yet
 bracklist:  LBRACK commalist RBRACK
 bracelist:  LBRACE commalist RBRACE
 */
 anglelist:  LANGLE commalist RANGLE
 
-class_decl:
-  CLASS decl INDENT
+class:
+  CLASS decl INDENT body
   {
     #ifdef DEBUG
         //cout << "class:" << $2 << endl;
     #endif
   }
+;
+
+body:
+  any 
+  | body any
 ;
 
 struct_decl:
@@ -159,16 +259,18 @@ decl:
  Additional Code
  ****************/
 
+using location_type = long;
+
+//void yy::parser::error(const syntax_error& err)
 void yy::parser::error(const location_type& loc, const std::string& msg)
 {
-    std::cerr << msg << " at " << loc << std::endl;
+  std::cerr << loc <<":\t" << msg << std::endl;
 }
 
-/*
 int main(void)
 {
-  return yyparse();
+  Lexer.lex();
+  return yy::parse();
 }
-*/
 
 

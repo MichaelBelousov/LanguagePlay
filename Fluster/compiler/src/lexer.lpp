@@ -2,9 +2,10 @@
 /*** RE/flex Preamble ***/
 
 %top{
-  #include <cmath>
-  #include "tokens.h"
+  #include <string>
   #include "parser.h"
+  #include "driver.h"
+  #include "lexer_routines.h"
 %}
 
 %class{
@@ -16,7 +17,7 @@
 /*** Definitions ***/
 
 
-ident               [_a-zA-Z][_a-zA-Z0-9]*
+id                  [_a-zA-Z][_a-zA-Z0-9]*
 digit               [0-9]
 bit                 [01]
 hex                 [0-9a-fA-F]
@@ -34,12 +35,10 @@ string_content      {any}*[^\\]
 %o outfile="lexer.cpp" header-file="lexer.h"
 %o namespace=yy
 %o lexer=Lexer
-%o lex=yylex
-%o yylineno
-%o noyywrap
+/*%o lex=yylex*/
+%o noyywrap nounput noinput batch debug
 %o bison
 %o reentrant
-/*%o bison-bridge*/
 
 %o tabs=4
 
@@ -56,197 +55,110 @@ string_content      {any}*[^\\]
 
 /*** operators ***/
 
-"<"             return toks::ops::langle;
-"<="            return toks::ops::langleeq;
-"=="            return toks::ops::doubleeq;
-"#="            return toks::ops::hasheq;
-"<=>"           return toks::ops::langleeqrangle;
-"~"             return toks::ops::tilde;
-"~~"            return toks::ops::tildetilde;
-"!="            return toks::ops::bangeq;
-">="            return toks::ops::rangleeq;
-">"             return toks::ops::rangle;
-"+"             return toks::ops::plus;
-"-"             return toks::ops::dash;
-"*"             return toks::ops::star;
-"/"             return toks::ops::fslash;
-"//"            return toks::ops::doublefslash;
-"%"             return toks::ops::percent;
-"^"             return toks::ops::caret;
-"^/"            return toks::ops::caretfslash;
-\<has\>         return toks::ops::has;
-\<is\>          return toks::ops::is;
-"&"             return toks::ops::ampersand;
-"|"             return toks::ops::pipe;
-">>"            return toks::ops::doublerangle;
-"<<"            return toks::ops::doublelangle;
-"->"            return toks::ops::dashrangle;
-"="             return toks::ops::eq;
-"+="            return toks::ops::pluseq;
-"-="            return toks::ops::dasheq;
-"*="            return toks::ops::stareq;
-"/="            return toks::ops::fslasheq;
-"//="           return toks::ops::doublefslasheq;
-"^/="           return toks::ops::caretfslasheq;
-"^="            return toks::ops::careteq;
-"&="            return toks::ops::ampersandeq;
-"|="            return toks::ops::pipeeq;
-"~="            return toks::ops::tildeeq;
-">>="           return toks::ops::doublerangleeq;
-"<<="           return toks::ops::doublelangleeq;
-"->="           return toks::ops::dashrangleeq;
-"$"             return toks::ops::dollar;
-"<-"            return toks::ops::langledash;
-"..."           return toks::ops::dotdotdot;
-"["             return toks::ops::lbrack;
-"]"             return toks::ops::rbrack;
-"{"             return toks::ops::lbrace;
-"}"             return toks::ops::rbrace;
-"("             return toks::ops::lpar;
-")"             return toks::ops::rpar;
-"."             return toks::ops::dot;
-","             return toks::ops::comma;
-"=>"            return toks::ops::eqrangle;
-":"             return toks::ops::colon;
-"@"             return toks::ops::at;
-"?"             return toks::ops::ques;
+"<"             return yy::parser::make_LANGLE (loc);
+"<="            return yy::parser::make_LANGLEEQ (loc);
+"=="            return yy::parser::make_DOUBLEEQ (loc);
+"#="            return yy::parser::make_HASHEQ (loc);
+"<=>"           return yy::parser::make_LANGLEEQRANGLE (loc);
+"~"             return yy::parser::make_TILDE (loc);
+"~~"            return yy::parser::make_TILDETILDE (loc);
+"!="            return yy::parser::make_BANGEQ (loc);
+">="            return yy::parser::make_RANGLEEQ (loc);
+">"             return yy::parser::make_RANGLE (loc);
+"+"             return yy::parser::make_PLUS (loc);
+"-"             return yy::parser::make_DASH (loc);
+"*"             return yy::parser::make_STAR (loc);
+"/"             return yy::parser::make_FSLASH (loc);
+"//"            return yy::parser::make_DOUBLEFSLASH (loc);
+"%"             return yy::parser::make_PERCENT (loc);
+"^"             return yy::parser::make_CARET (loc);
+"^/"            return yy::parser::make_CARETFSLASH (loc);
+\<has\>         return yy::parser::make_HAS (loc);
+\<is\>          return yy::parser::make_IS (loc);
+"&"             return yy::parser::make_AMPERSAND (loc);
+"|"             return yy::parser::make_PIPE (loc);
+">>"            return yy::parser::make_DOUBLERANGLE (loc);
+"<<"            return yy::parser::make_DOUBLELANGLE (loc);
+"->"            return yy::parser::make_DASHRANGLE (loc);
+"="             return yy::parser::make_EQ (loc);
+"+="            return yy::parser::make_PLUSEQ (loc);
+"-="            return yy::parser::make_DASHEQ (loc);
+"*="            return yy::parser::make_STAREQ (loc);
+"/="            return yy::parser::make_FSLASHEQ (loc);
+"//="           return yy::parser::make_DOUBLEFSLASHEQ (loc);
+"^/="           return yy::parser::make_CARETFSLASHEQ (loc);
+"^="            return yy::parser::make_CARETEQ (loc);
+"&="            return yy::parser::make_AMPERSANDEQ (loc);
+"|="            return yy::parser::make_PIPEEQ (loc);
+"~="            return yy::parser::make_TILDEEQ (loc);
+">>="           return yy::parser::make_DOUBLERANGLEEQ (loc);
+"<<="           return yy::parser::make_DOUBLELANGLEEQ (loc);
+"->="           return yy::parser::make_DASHRANGLEEQ (loc);
+"$"             return yy::parser::make_DOLLAR (loc);
+"<-"            return yy::parser::make_LANGLEDASH (loc);
+"..."           return yy::parser::make_DOTDOTDOT (loc);
+"["             return yy::parser::make_LBRACK (loc);
+"]"             return yy::parser::make_RBRACK (loc);
+"{"             return yy::parser::make_LBRACE (loc);
+"}"             return yy::parser::make_RBRACE (loc);
+"("             return yy::parser::make_LPAR (loc);
+")"             return yy::parser::make_RPAR (loc);
+"."             return yy::parser::make_DOT (loc);
+","             return yy::parser::make_COMMA (loc);
+"=>"            return yy::parser::make_EQRANGLE (loc);
+":"             return yy::parser::make_COLON (loc);
+"@"             return yy::parser::make_AT (loc);
+"?"             return yy::parser::make_QUES (loc);
 
-\<in\>          return toks::kwords::in_;
-\<contains\>    return toks::kwords::contains_;
-\<assert\>      return toks::kwords::assert_;
-\<mod\>         return toks::kwords::mod_;
-\<if\>          return toks::kwords::if_;
-\<else\>        return toks::kwords::else_;
-\<elif\>        return toks::kwords::elif_;
-\<for\>         return toks::kwords::for_;
-\<while\>       return toks::kwords::while_;
-\<until\>       return toks::kwords::until_;
-\<try\>         return toks::kwords::try_;
-\<catch\>       return toks::kwords::catch_;
-\<throw\>       return toks::kwords::throw_;
-\<with\>        return toks::kwords::with_;
-\<struct\>      return toks::kwords::struct_;
-\<class\>       return toks::kwords::class_;
-\<const\>       return toks::kwords::const_;
-\<typeof\>      return toks::kwords::typeof_;
-\<cloneof\>     return toks::kwords::cloneof_;
-\<import\>      return toks::kwords::import_;
+\<in\>          return yy::parser::make_IN (loc);
+\<contains\>    return yy::parser::make_CONTAINS (loc);
+\<assert\>      return yy::parser::make_ASSERT (loc);
+\<mod\>         return yy::parser::make_MOD (loc);
+\<if\>          return yy::parser::make_IF (loc);
+\<else\>        return yy::parser::make_ELSE (loc);
+\<elif\>        return yy::parser::make_ELIF (loc);
+\<for\>         return yy::parser::make_FOR (loc);
+\<while\>       return yy::parser::make_WHILE (loc);
+\<until\>       return yy::parser::make_UNTIL (loc);
+\<try\>         return yy::parser::make_TRY (loc);
+\<catch\>       return yy::parser::make_CATCH (loc);
+\<throw\>       return yy::parser::make_THROW (loc);
+\<with\>        return yy::parser::make_WITH (loc);
+\<struct\>      return yy::parser::make_STRUCT (loc);
+\<class\>       return yy::parser::make_CLASS (loc);
+\<const\>       return yy::parser::make_CONST (loc);
+\<typeof\>      return yy::parser::make_TYPEOF (loc);
+\<cloneof\>     return yy::parser::make_CLONEOF (loc);
+\<import\>      return yy::parser::make_IMPORT (loc);
 
 
-{ident} {
-}
+{id}                                        return yy::parser::make_IDENTIFIER(yytext, loc);
 
 /*** literals ***/
 
 /* int literals */
-{decint}                                    {
-                                                yylval.integer = strtoll(text(), NULL, 10);
-                                                return toks::lits::int_;
-                                            }
+{decint}                                    return make_DECIMINTEGER (yytext, loc);
 
 /* float literal */
-{decint}(\.{digit}+)?([Ee][+-]?{decint})?   {   
-                                                yylval.floating = strtold(text(), NULL);
-                                                return toks::lits::float_;
-                                            }
+{decint}(\.{digit}+)?([Ee][+-]?{decint})?   return make_DECIMFLOAT (yytext, loc);
 
 /* byte literals */
-0x{hex}*    {
-    char bytes[] = new char[ceil((strlen(text())-2)/2.0)];
-    bool do_load = false; //could move this to the oddness of i
-    char byte;
-    for (int i = 0; p[i]; ++i, commit = !commit) 
-    { 
-        char val;
-        if (do_load) {  //we're loading the first hex numeral
-            if (p[i] <= 57) //is an ascii number
-                val = p[i] - 48;
-            else            //is an ascii letter
-                val = (p[i] | (1<<5)) - 87;
-            byte = val;
-        }
-        else {
-            if (p[i] <= 57) //is an ascii number
-                val = p[i] - 48
-            else            //is an ascii letter
-                val = (p[i] | (1<<5)) - 87;
-            byte |= val << 4    //add the more significant nibble
-            bytes[i/2] = byte;  //relying on floor division
-        }
-        
-    }
-    yylval.bytes = bytes;
-    return toks::lits::byte_;
-}
+0x{hex}*                                    return make_HEXBYTES (yytext, loc);
 
 /* bit literal */
-0b{bit}*    {
-    //FIXME: untested and I may have loaded the byte stream backwards
-    //just use rshift and reverse the process. Maybe make all this
-    //repetitive code into a procedure, too
-    char bytes[] = new char[ceil((strlen(text())-2)/8.0)];
-    char byte;
-    //TODO: replace depthmax literal with constexpr var
-    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
-    { 
-        byte |= (p[i] - 48) << depth;
-        //TODO: package in a lambda for reuse
-        if (depth == 7) {
-            bytes[i/2] = byte; //relying on floor division
-            byte = 0;
-        }
-    }
-    if (depth) {
-        bytes[i/2] = byte; //relying on floor division
-        byte = 0;
-    }
-    yylval.bytes = bytes;
-    return toks::lits::bit_;
-}
+0b{bit}*                                    return make_BINARYBITS (yytext, loc);
 
 /* octal literal */
-0o{octal}   {
-    //FIXME: untested and I may have loaded the byte stream backwards
-    //TODO: account for endianness
-    char bytes[] = new char[ceil((strlen(text())-2)/3.0)];
-    char* head = bytes;
-    char word[4];  //32 bit buffer for 24 bit chunks
-    int& wordval = reinterpret_cast<int&>(&wordbyte);
-    //TODO: replace depthmax literal with constexpr var
-    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
-    { 
-        //TODO: package in a lambda for reuse
-        wordval |= (p[i] - 48) << depth*3;
-        if (depth == 7) {
-            head[i] = word[0];
-            head[i+1] = byte;
-            head[i+2] = byte;
-            byte = 0;
-            wordval = 0;
-            head += 3;
-        }
-    }
-    //FIXME: optimize using a lambda or (god-forbid) a **label+goto**
-    if (depth) {
-        head[i] = word[0];
-        head[i+1] = byte;
-        head[i+2] = byte;
-        byte = 0;
-        wordval = 0;
-        head += 3;
-    }
-    yylval.bytes = bytes;
-    return toks::lits::byte_;
-}
+0o{octal}                                   return make_OCTALBITS (yytext, loc);
 
-/* string literal */
-\"{string_content}\"                        return toks::lits::string_;
+/* string literal */                        /* TODO: use a state to dedent source */
+\"{string_content}\"                        return make_STRING (yytext, loc);
 
 /* unicode literal */
-u\"(?u:{string_content})\"                  return toks::lits::string_unicode_;
+u\"(?u:{string_content})\"                  return make_UNICODESTRING (yytext, loc);
 
 /* raw string literal */
-\`{string_content}\`                        return toks::lits::string_raw_;
+\`{string_content}\`                        return make_RAWSTRING (yytext, loc);
 
 
 
@@ -260,7 +172,7 @@ u\"(?u:{string_content})\"                  return toks::lits::string_unicode_;
 "//".*                                      //ignore
 
 /* eof */
-<<EOF>>                                     return -1;
+<<EOF>>                                     return yy::parser::make_END (loc);
 
 
 
@@ -284,10 +196,3 @@ u\"(?u:{string_content})\"                  return toks::lits::string_unicode_;
 /* ********************************************************************************** */ 
 /* ********************************************************************************** */ 
 /* ********************************************************************************** */ 
-
-
-int main()
-{
-    return Lexer().lex();
-}
-
