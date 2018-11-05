@@ -10,7 +10,7 @@
 
 # project vars
 OUTBIN= fc
-OBJS= lexer_core.o parse.o parse_bison.o
+OBJS= lexer.o parse.o parse_bison.o
 
 # compiler vars
 CPPC=c++
@@ -22,10 +22,10 @@ CPPFLAGS= -O$(OPTLVL) $(LIBS) $(INCLUDE)
 CFLAGS= -O$(OPTLVL) $(LIBS) $(INCLUDE)
 
 # generator vars
-LEXNAME= lexer_core
-YACCNAME= parser_core
-LEXOUT= lexer_core.cpp lexer_core.h lex.yy.cpp lex.yy.c
-YACCOUT= parser_core.c parser_core.h Fluster.tab.c
+LEXNAME= lexer
+YACCNAME= parser
+LEXOUT= lexer.cpp lexer.h
+YACCOUT= parser.cpp parser.h stack.hh
 
 
 ###########################
@@ -43,16 +43,16 @@ all: $(OBJS)
 ####### Generators Rules
 
 
-lexer_core.o: lexer_core.cpp
+lexer.o: lexer.cpp
 	$(CPPC) -o $@ -g $(CPPFLAGS) $^
 
-lexer_core.cpp:
+lexer.cpp:
 	reflex lexer.l
 
-parser_core.o:
+parser.o:
 	$(CPPC) -o $@ -g $(CPPFLAGS) $^
 
-parser_core.cpp:
+parser.cpp:
 	bison parser.y
 
 

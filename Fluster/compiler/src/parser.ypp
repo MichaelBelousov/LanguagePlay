@@ -7,13 +7,14 @@
 
 %skeleton "lalr1.cc"
 %require "3.0"
+%output "parser.cpp"
+%defines "parser.h"
+
+/* options */
+
+/*%define api.pure full*/
 
 %{
-/*
-  #include <stdio.h>
-  #include <cmath>
-  #include <ctype>
-*/
   #include <iostream>
   #define DEBUG
 %}
@@ -32,7 +33,6 @@
   #define yylex lexer.yylex
 %}
 
-/*%define api.pure full*/
 
 %union {
     long long   integer;
