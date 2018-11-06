@@ -140,7 +140,7 @@ string_content      {any}*[^\\]
 {decint}                                    return make_DECIMINTEGER (yytext, loc);
 
 /* float literal */
-{decint}(\.{digit}+)?([Ee][+-]?{decint})?   return make_DECIMFLOAT (yytext, loc);
+{decint}(\.{digit}+)?([Ee][+-]?{digit}+)?   return make_DECIMFLOAT (yytext, loc);
 
 /* byte literals */
 0x{hex}*                                    return make_HEXBYTES (yytext, loc);
