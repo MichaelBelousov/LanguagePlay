@@ -12,6 +12,18 @@ struct BitBuffer
     ~BitBuffer() { delete[] bytes; }
 };
 
+setBits(unsigned bit_offset, short bit_amt, char bits, char bytes[])
+{
+    const unsigned byte_offset = bit_offset / 8;
+    const unsigned inner_bit_offset = bit_offset % 8;
+    if (inner_bit_offset < bit_amt)
+        wordval |= (p[i] - 48) << bit_offset;
+    else {
+        const unsigned inner_bit_offset - bit_amt;
+    }
+}
+
+
 template<int base>
 BitBuffer loadAsciiBitLiteral(const std::string& literal, const std::string& prefix)
 {
@@ -29,7 +41,11 @@ BitBuffer loadAsciiBitLiteral(const std::string& literal, const std::string& pre
         const unsigned byte_offset = bit_offset / 8;
         const unsigned inner_bit_offset = bit_offset % 8;
         if (inner_bit_offset < bits_per_char)
-        wordval |= (p[i] - 48) << depth*bits_per_char;
+            wordval |= (p[i] - 48) << depth*bits_per_char;
+        else {
+            //upper word:
+            //lower word:
+        }
     };
 
     int depth = 0; //initialize depth to first bit to set
