@@ -12,14 +12,23 @@ struct BitBuffer
     ~BitBuffer() { delete[] bytes; }
 };
 
-setBits(unsigned bit_offset, short bit_amt, char bits, char bytes[])
+//XXX: assumes the bits are unset, would need masking otherwise
+setBits(unsigned bit_offset, int bits_len, char bits, char bytes[])
 {
-    const unsigned byte_offset = bit_offset / 8;
-    const unsigned inner_bit_offset = bit_offset % 8;
-    if (inner_bit_offset < bit_amt)
-        wordval |= (p[i] - 48) << bit_offset;
-    else {
-        const unsigned inner_bit_offset - bit_amt;
+    using cuint = const unsigned;
+    cuint left_byte_id = bit_offset/8;
+    cuint left_bound = bit_offset % 8;
+    cuint right_byte_id = (bit_offset+bits_len)/8;
+    cuint right_bound = (bit_offset+bits_len) % 8;
+
+    if (left_byte_id == right_byte_id)
+    {
+        bytes[right_byte_id] |= bits << right_bound;
+    }
+    else
+    {
+        bytes[right_byte_id] |= bits << right_bound;
+        bytes[left_byte_id] |= bits >> 8-left_bound;
     }
 }
 
@@ -35,47 +44,17 @@ BitBuffer loadAsciiBitLiteral(const std::string& literal, const std::string& pre
 
     auto result = BitBuffer(bit_amt);
 
-    auto setBits = [&result, &bits_per_char]
-            (unsigned bit_offset, int value) -> void 
-    {
-        const unsigned byte_offset = bit_offset / 8;
-        const unsigned inner_bit_offset = bit_offset % 8;
-        if (inner_bit_offset < bits_per_char)
-            wordval |= (p[i] - 48) << depth*bits_per_char;
-        else {
-            //upper word:
-            //lower word:
-        }
-    };
-
-    int depth = 0; //initialize depth to first bit to set
-    int depth = byte_amt/ bit_amt
+    int depth = 0;
     for (auto itr = literal.cbegin(); 
          itr != literal.cend();
          ++itr, depth+=bits_per_char)
     { 
+        char bits;
         if (p[i] <= 57) //is an ascii number
-            wordval |= (p[i] - 48) << depth*bits_per_char;
+             bits = p[i] - 48
         else            //is an ascii letter
-            wordval |= ((p[i] | (1<<5)) - 87) << depth*bits_per_char;
-        byte = val;
-
-        if (depth == bits_per_char-1) {
-            head[i] = word[0];
-            head[i+1] = word[1];
-            head[i+2] = word[2];
-            wordval = 0;
-            head += buffsize;
-        }
-    }
-    //FIXME: optimize using a lambda or (god-forbid) a **label+goto**
-    if (depth) {
-        //FIXME: switch to full 32-bit word load
-        head[i] = word[0];
-        head[i+1] = word[1];
-        head[i+2] = word[2];
-        wordval = 0;
-        head += 3;
+            bits = (p[i] | (1<<5)) - 87
+        setBits(depth, bit_per_char, bits, result.bytes)
     }
     return result;
 }

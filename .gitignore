@@ -31,6 +31,10 @@
 *.out
 *.app
 
+# vim
+*.swp
+*.swo
+
 # generated source
 **/lex.yy.c[p]*
 **/lexer.h
