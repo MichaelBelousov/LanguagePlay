@@ -1,34 +1,39 @@
 
 #include <cmath>
 
+#include <cmath>
+
 struct BitBuffer
 {
-    int length;
-    char* bytes;
-    BitVuffer(int in_bits)
-        : length(in_bits)
-        , bytes(new char[std::ceil(in_bits/8.f)])
-    {}
+    unsigned int bytes_len;
+    unsigned int length;
+    unsigned char* bytes;
+    BitBuffer(int in_bits)
+        : bytes_len(std::ceil(in_bits/8.f))
+        , length(in_bits)
+        , bytes(new unsigned char[bytes_len])
+    {
+        std::memset(bytes, 0, sizeof(unsigned char)*bytes_len);
+    }
     ~BitBuffer() { delete[] bytes; }
 };
 
-//XXX: assumes the bits are unset, would need masking otherwise
-setBits(unsigned bit_offset, int bits_len, char bits, char bytes[])
+void setBits(unsigned bit_offset, unsigned int bits_len, unsigned char bits, unsigned char bytes[])
 {
     using cuint = const unsigned;
     cuint left_byte_id = bit_offset/8;
     cuint left_bound = bit_offset % 8;
-    cuint right_byte_id = (bit_offset+bits_len)/8;
-    cuint right_bound = (bit_offset+bits_len) % 8;
+    cuint right_byte_id = (bit_offset-1+bits_len)/8;
+    cuint right_bound = (bit_offset-1+bits_len) % 8;
 
     if (left_byte_id == right_byte_id)
     {
-        bytes[right_byte_id] |= bits << right_bound;
+        bytes[right_byte_id] |= bits << (8-(right_bound+1));
     }
     else
     {
-        bytes[right_byte_id] |= bits << right_bound;
-        bytes[left_byte_id] |= bits >> 8-left_bound;
+        bytes[right_byte_id] |= bits << (8-(right_bound+1));
+        bytes[left_byte_id] |= bits >> (left_bound - (8-bits_len));
     }
 }
 
@@ -40,21 +45,22 @@ BitBuffer loadAsciiBitLiteral(const std::string& literal, const std::string& pre
 
     const int bits_per_char = std::log2(base);
     const int bit_amt = (literal.length() - prefix.length()) * bits_per_char;
-    const int byte_amt = ceil(bit_amt / 8);
+    const int byte_amt = std::ceil(bit_amt/8.f);
 
     auto result = BitBuffer(bit_amt);
 
-    int depth = 0;
-    for (auto itr = literal.cbegin(); 
+    const int bit_padding = (byte_amt*8) - bit_amt;
+    int depth = bit_padding;
+    for (auto itr = literal.cbegin()+prefix.length(); 
          itr != literal.cend();
          ++itr, depth+=bits_per_char)
     { 
-        char bits;
-        if (p[i] <= 57) //is an ascii number
-             bits = p[i] - 48
+        unsigned char bits;
+        if (*itr  <= 57) //is an ascii number
+             bits = *itr  - 48;
         else            //is an ascii letter
-            bits = (p[i] | (1<<5)) - 87
-        setBits(depth, bit_per_char, bits, result.bytes)
+            bits = (*itr | (1<<5)) - 87;
+        setBits(depth, bits_per_char, bits, result.bytes);
     }
     return result;
 }
@@ -66,63 +72,25 @@ make_DECIMINTEGER (const std::string &s, const yy::parser::location_type& loc)
     long long n = strtoll (s.c_str(), NULL, 10);
     if (! (INT_MIN <= n && n <= INT_MAX && errno != ERANGE))
         throw yy::parser::syntax_error (loc, "integer is out of range: " + s);
-    return yy::parser::make_NUMBER (n, loc);
+    return yy::parser::make_NUMBER(n, loc);
 }
 
 yy::parser::symbol_type 
-make_DECIMFLOAT(const std::string &s, const yy::parser::location_type& loc);
+make_DECIMFLOAT(const std::string &s, const yy::parser::location_type& loc) {
+}
 
 /* byte literals */
 yy::parser::symbol_type 
 make_HEXBYTES (const std::string &s, const yy::parser::location_type& loc)
 {
-    char bytes[] = new char[ceil((strlen(text())-2)/2.0)];
-    bool do_load = false; //could move this to the oddness of i
-    char byte;
-    for (int i = 0; p[i]; ++i, commit = !commit) 
-    { 
-        char val;
-        if (do_load) {  //we're loading the first hex numeral
-            if (p[i] <= 57) //is an ascii number
-                val = p[i] - 48;
-            else            //is an ascii letter
-                val = (p[i] | (1<<5)) - 87;
-            byte = val;
-        }
-        else {
-            if (p[i] <= 57) //is an ascii number
-                val = p[i] - 48
-            else            //is an ascii letter
-                val = (p[i] | (1<<5)) - 87;
-            byte |= val << 4;  //add the more significant nibble
-            bytes[i/2] = byte;  //relying on floor division
-        }
-    }
-    yylval.bytes = bytes;
+    auto Buffer = loadAsciiBitLiteral<16>(s, "0x");
+    yylval.bytes = Buffer.bytes;
     return toks::lits::byte_;
 }
 yy::parser::symbol_type 
 make_BINARYBITS (const std::string &s, const yy::parser::location_type& loc)
 {
-    //FIXME: untested and I may have loaded the byte stream backwards
-    //just use rshift and reverse the process. Maybe make all this
-    //repetitive code into a procedure, too
-    char bytes[] = new char[ceil((strlen(text())-2)/8.0)];
-    char byte;
-    //TODO: replace depthmax literal with constexpr var
-    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
-    { 
-        byte |= (p[i] - 48) << depth;
-        //TODO: package in a lambda for reuse
-        if (depth == 7) {
-            bytes[i/2] = byte; //relying on floor division
-            byte = 0;
-        }
-    }
-    if (depth) {
-        bytes[i/2] = byte; //relying on floor division
-        byte = 0;
-    }
+    auto Buffer = loadAsciiBitLiteral<2>(s, "0b");
     yylval.bytes = bytes;
     return toks::lits::bit_;
 }
@@ -130,35 +98,9 @@ make_BINARYBITS (const std::string &s, const yy::parser::location_type& loc)
 yy::parser::symbol_type 
 make_OCTALBITS (const std::string &s, const yy::parser::location_type& loc)
 {
-    //FIXME: untested and I may have loaded the byte stream backwards
-    //TODO: account for endianness
-    char bytes[] = new char[ceil((strlen(text())-2)/3.0)];
-    char* head = bytes;
-    char word[4];  //32 bit buffer for 24 bit chunks
-    int& wordval = reinterpret_cast<int&>(&wordbyte);
-    //TODO: replace depthmax literal with constexpr var
-    for (int i=0, depth=0; p[i]; ++i, depth=(++depth%8))
-    { 
-        //TODO: package in a lambda for reuse
-        wordval |= (p[i] - 48) << depth*3;
-        if (depth == 7) {
-            head[i] = word[0];
-            head[i+1] = word[1];
-            head[i+2] = word[2];
-            wordval = 0;
-            head += 3;
-        }
-    }
-    //FIXME: optimize using a lambda or (god-forbid) a **label+goto**
-    if (depth) {
-        //FIXME: switch to full 32-bit word load
-        head[i] = word[0];
-        head[i+1] = word[1];
-        head[i+2] = word[2];
-        wordval = 0;
-        head += 3;
-    }
-    return bytes;
+    auto Buffer = loadAsciiBitLiteral<8>(s, "0o");
+    yylval.bytes = Buffer.bytes;
+    return toks::lits::oct_;
 }
 
 //yy::parser::symbol_type 

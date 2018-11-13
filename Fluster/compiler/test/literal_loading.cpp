@@ -26,12 +26,16 @@ std::ostream& operator<<(std::ostream& os, Bits b)
 
 struct BitBuffer
 {
+    unsigned int bytes_len;
     unsigned int length;
     unsigned char* bytes;
     BitBuffer(int in_bits)
-        : length(in_bits)
-        , bytes(new unsigned char[std::ceil(in_bits/8.f)])
-    {}
+        : bytes_len(std::ceil(in_bits/8.f))
+        , length(in_bits)
+        , bytes(new unsigned char[bytes_len])
+    {
+        std::memset(bytes, 0, sizeof(unsigned char)*bytes_len);
+    }
     ~BitBuffer() { delete[] bytes; }
 };
 
@@ -55,20 +59,12 @@ void setBits(unsigned bit_offset, unsigned int bits_len, unsigned char bits, uns
     if (left_byte_id == right_byte_id)
     {
         bytes[right_byte_id] |= bits << (8-(right_bound+1));
-        std::cout 
-            << Bits(8-(right_bound)+1) << " "
-            << Bits(bytes[right_byte_id])
-            << std::endl;
     }
     else
     {
         bytes[right_byte_id] |= bits << (8-(right_bound+1));
-        bytes[left_byte_id] |= bits >> (left_bound - bits_len);
+        bytes[left_byte_id] |= bits >> (left_bound - (8-bits_len));
     }
-    std::cout 
-        << "right " << right_byte_id << ", left " << left_byte_id
-        << "r] " << right_bound << ", l[ " << left_bound
-        << std::endl;
 }
 
 
@@ -138,6 +134,27 @@ bool test_oct_standard1() {
     return result;
 }
 
+bool test_bin_standard1() {
+    auto test_str = "0b100101";
+    std::cout << "testing " << test_str << std::endl;
+    bool result = true;
+    unsigned char expected[] = {045};
+    auto actual = loadAsciiBitLiteral<2>(test_str, "0b");
+    for (int i = 0; i < 1; ++i)
+        if (actual.bytes[i] != expected[i])
+        {
+            std::cerr << "byte " << i << ": "
+                      << Bits(actual.bytes[i])
+                      << " != " 
+                      << Bits(expected[i])
+                      << std::endl;
+            result = false;
+        }
+    if (result) std::cout << ("test successful") << std::endl;
+    return result;
+}
+
+
 int do_assert(bool result, const std::string& msg)
 {
     if (!result)
@@ -156,6 +173,8 @@ int main(int argc, char* argv[])
                         "failed loading 0xa0f5c");
     failed += do_assert(test_oct_standard1(), 
                         "failed loading 0o777");
+    failed += do_assert(test_bin_standard1(), 
+                        "failed loading 0b100101");
 
     if (!failed)
         std::cout << "passed all tests" << std::endl;
