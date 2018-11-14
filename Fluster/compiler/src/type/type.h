@@ -8,52 +8,32 @@
 
 #include <memory>
 #include <utility>
-#include <tuple>
-#include <map>
+#include <vector>
 #include "value.h"
-#include <algorithm>
+#include "property.h"
 
 namespace Fluster {
 
 
 
-struct Type;
-
-struct Property
+struct Type : Public Parametric
 {
-    using std::string;
-    string name;
-    Type& type;
-    Property(const string& in_name, const Type& in_type)
-        : name(in_name), type(in_type) {}
-};
-
-struct Type  //: Public Parametric
-{
-    using std::vector; using std::map;
-    using std::tuple; using std::set;
+private:
+    using std::vector; using std::set;
+    using This = Type;
 public:  //types
-    using Properties = set<Properties>;
     using Ptr = std::shared_ptr<Type>;
     using WeakPtr = std::weak_ptr<Type>;
-
-private: //class variables
-    static int next_id = 0;
-    static const Type MetaType;
-
 public:  //members
-    //TODO: switch to property hash + a "factor" for clones
     const int factor;
-    const int id;
-    vector<Type::Ptr> convertible_from;
-    vector<Type::WeakPtr> convertible_to;
+    vector<This::Ptr> convertible_from;
+    vector<This::WeakPtr> convertible_to;
     const Properties inst_props;
     const Properties type_props;
 
 public: //construction
-    static getNextAvailableId() {return next_id++;};
     Type()  //T: Type
-        : id(getNextAvailableId(), 
+        : id(getNextAvailableId()), 
         , convertible_from() 
         , convertible_to() 
         , inst_props() 
@@ -91,6 +71,11 @@ private:
         , convertible_to(std::forward(in_convertible_to))
         , inst_props(std::forward(in_inst_props)) 
         , type_props(std::forward(in_type_props)) {}
+    const int hash() const
+    {
+        //std::hash?
+        return 1;
+    }
 
 public:  //Operators
     friend bool operator==(const Type& lhs, const Type& rhs);
@@ -106,11 +91,14 @@ public:  //Methods
     Type cloneof();
     void defineConversion(Type& u, Type& v);
 
+    //TODO: split off into more objects
+    using ConversionPath = std::vector<Type>;
     ConversionPath 
     getConversionPath(const Value& value, 
                       const Type& to);
 };
 
+//make into a parametric
 struct Array 
 {
     Type& type;
@@ -135,8 +123,8 @@ namespace builtin
         extern const Type float64;
 
         extern const Type bool_;
-        extern const Type byte_;
-        extern const Type bit_;
+        extern const Type byte;
+        extern const Type bit;
     };
 };
 
