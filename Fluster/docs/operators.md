@@ -162,5 +162,13 @@ t = -132
 typeof t == int32
 MyType = cloneof float32
 MyType != float32
+T & U
+T | U
+T - U
+!T  //not complement (~)
+!T   //mutable T? ORRR
+#T   //immutable T?
+&T = reference to T?
+
 ```
 

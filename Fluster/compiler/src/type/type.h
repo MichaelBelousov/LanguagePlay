@@ -11,6 +11,7 @@
 #include <vector>
 #include "value.h"
 #include "property.h"
+#include "resolution.h"
 
 namespace Fluster {
 
@@ -21,6 +22,7 @@ struct Type : Public Parametric
 private:
     using std::vector; using std::set;
     using This = Type;
+    friend Resolution;
 public:  //types
     using Ptr = std::shared_ptr<Type>;
     using WeakPtr = std::weak_ptr<Type>;
