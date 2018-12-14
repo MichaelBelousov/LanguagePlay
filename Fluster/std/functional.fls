@@ -1,0 +1,70 @@
+/*
+Functional base for standard library
+*/
+
+// min, max
+
+// enumerate/index
+
+func index(iter: Iterable)
+    i = 0
+    return Stream<(i) => (iter.next(), i++)>
+
+// nth
+
+// range
+
+// map
+
+func map<IterType: Iterable<T: Type>, 
+         FuncType: Func<R: Type, T>>
+        (f: FuncType, iter: IterType): Stream<R>
+    return Stream<() => f(iter.next())>
+
+/*
+a = 2
+map((x)=>x+a, 
+    [5, 10, 2]) // == Stream(7, 12, 4)
+*/
+
+
+// zip
+
+struct zip(...args)
+    itrs = args
+    meth next()
+        return (...itrs).next()
+    
+
+// filter
+
+filter<filt: Func>(iter: Iterable)
+    return Stream<>
+
+struct zip(...args)
+    itrs = args
+    meth next()
+        return (...itrs).next()
+
+## apply
+
+## all, any
+
+## length
+
+## finite
+
+## sum
+
+## prod
+
+## reduce
+
+## sorted
+
+## reversed
+
+## head, tail, split
+
+## truth
+
