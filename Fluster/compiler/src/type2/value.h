@@ -1,9 +1,6 @@
 #ifndef FLUSTER_COMPILER_VALUE
 #define FLUSTER_COMPILER_VALUE
 
-#include <map>
-#include <memory>
-#include <string>
 class Type;
 
 namespace Fluster {
@@ -16,16 +13,11 @@ public:
     virtual const Type& typeof() const = 0;
 };
 
-class Identifier {
-    using std::string;
-    //// Construction
-    const string text;
-public:
-    Identifier(const string& in)
-      : text(in)
-    {
-        if (regex_pattern(R"([a-zA-Z_][a-zA-Z0-9_]*)").matches(text))
-    }
+//TODO: std::enable_if<std::is_primitive<CppAnalogType>>::value>
+template<typename CppAnalogType>
+final class PrimitiveValue : public Value {
+    CppAnalogType payload;
+    virtual const Type& typeof() const override;
 };
 
 

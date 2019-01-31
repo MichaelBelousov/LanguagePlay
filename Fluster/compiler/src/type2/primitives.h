@@ -9,6 +9,7 @@ namespace Fluster {
 
 /* Primitive types */
 
+//metatype primitive
 extern static const Type TheType;
 
 //integer primitive types
