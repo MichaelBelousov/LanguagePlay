@@ -32,8 +32,18 @@ using Args = vector<Value>;
 struct Resolve 
 {
     using std::tuple;
-    static HLCode overloadedProcedure(Callable f, Args args)
+    static HLCode overloadedProcedure(Procedure p, Args args)
     {
+        for (const auto& [prm,arg] : tuple(p, args))
+            if (prm.type != arg.type) 
+            {
+                if (DirectlyConvertibleFrom(arg.type).contains(prm.type))
+                {
+                    if (len(DirectlyConvertibleFrom(arg.type)) > 0)
+                        return 0;
+                }
+                else throw CantConvertDirectly()
+            }
     }
     //FIXME: doesn't belong here
     //TODO: make a more generic overload resolver for arguables
@@ -84,12 +94,16 @@ struct Resolve
         }
     }
 private:
-    static DirectConversion findDirectConversion(Type type)
+    static DirectConversion findDirectConversion(Type from, Type to)
     {
         //oooh, maybe call python-style try-except `problems'?
         //problems and panics? for control flow?
         if (BAD)
             throw CantConvertDirectly();
+    }
+    static List<Type> DirectlyConvertibleFrom(Type from)
+    {
+        return List<Type>();
     }
 };
 

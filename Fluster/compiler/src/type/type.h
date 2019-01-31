@@ -17,7 +17,7 @@ namespace Fluster {
 
 
 
-struct Type : Public Parametric
+struct Type : public Value, public Parametric
 {
 private:
     using std::vector; using std::set;
