@@ -23,6 +23,8 @@ public:
     //// Private Members
 private:
     Type type;
+    //alignment
+    //LLVM value
 };
 
 

@@ -7,30 +7,30 @@ namespace Fluster {
 
 /* Primitive types */
 
-static const Type TheType(new _Type);
+static const TypePtr TheType(new Type);
 
 //integer primitive types
-static const Type int8(new _Type);
-static const Type int16(new _Type);
-static const Type int32(new _Type);
-static const Type int64(new _Type);
-static const Type& int_ = int32;
+static const TypePtr int8(new Type);
+static const TypePtr int16(new Type);
+static const TypePtr int32(new Type);
+static const TypePtr int64(new Type);
+static const TypePtr& int_ = int32;
 //unsigned integer primitive types
-static const Type uint8(new _Type);
-static const Type uint16(new _Type);
-static const Type uint32(new _Type);
-static const Type uint64(new _Type);
-static const Type& uint = uint32;
+static const TypePtr uint8(new Type);
+static const TypePtr uint16(new Type);
+static const TypePtr uint32(new Type);
+static const TypePtr uint64(new Type);
+static const TypePtr& uint = uint32;
 
 //floating point primitive types
-static const Type float32(new _Type);
-static const Type float64(new _Type);
-static const Type& float_ = float32;
+static const TypePtr float32(new Type);
+static const TypePtr float64(new Type);
+static const TypePtr& float_ = float32;
 
 //raw types
-static const Type bit(new _Type);
-static const Type byte(new _Type);
-static const Type word(new _Type);
+static const TypePtr bit(new Type);
+static const TypePtr byte(new Type);
+static const TypePtr word(new Type);
 
 
 

@@ -7,33 +7,54 @@
 #include "utils.h"
 #include "identifier.h"
 
-class Type;
-
 namespace Fluster {
 
+class Type;
 
 
-class _Type : public Value {
+
+using TypePtr = std::shared_ptr<Type>;
+using Props = Dict<Identifier, Value>;
+
+class Type : public Value {
+
+//// Public Types
+public:
+    enum class Kind;
+    namespace Builder;
 
 //// Public Interface
 public:
-    virtual Type cloneof() const;
-    virtual const Type typeof() const override;
+    virtual TypePtr cloneof() const;
+    const TypePtr typeof() const override;
  
 //// Construction
 public:
+    Type();
     
 //// Private Fields
 private:
-    Dict<Identifier, Value> properties;
+    Kind kind;
+    Props props;
 
 //// Operators
-    //bool operator==(const _Type& other) const;
+    friend bool operator==(const Type& lhs, const Type& rhs);
 
 };
 
-using Type = std::shared_ptr<_Type>;
 
+enum class Type::Kind : int {
+    meta,
+    class_,
+    struct_,
+    primitive
+};
+
+namespace Type::Builder {
+    static TypePtr Class();
+    static TypePtr Struct();
+    static TypePtr Special(Properties properties, Type::Kind in_kind);
+};
 
 
 }; //namespace Fluster
