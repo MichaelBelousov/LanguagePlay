@@ -1,6 +1,8 @@
 #ifndef FLUSTER_COMPILER_PRIMITIVES
 #define FLUSTER_COMPILER_PRIMITIVES
 
+#include <ctypes>
+
 class Type;
 
 namespace Fluster {
@@ -35,6 +37,20 @@ extern static const Type bit;
 extern static const Type byte;
 extern static const Type word;
 
+
+//TODO: std::enable_if<std::is_scalar<CppAnalogType>>::value>
+template<typename CppAnalogType>
+final class PrimitiveValue : public Value {
+    CppAnalogType payload;
+    virtual const Type& typeof() const override;
+};
+
+virtual const Type& PrimitiveValue<int8_t>::typeof() const {
+    return int8;
+}
+virtual const Type& PrimitiveValue<int16_t>::typeof() const {
+    return int16;
+}
 
 
 };

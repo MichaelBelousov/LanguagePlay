@@ -7,19 +7,23 @@ namespace Fluster {
 
 
 
-class Value {
+//TODO: rename to AbstractValue?
+class /*Base*/Value {
     //// Public Interface
 public:
     virtual const Type& typeof() const = 0;
 };
 
-//TODO: std::enable_if<std::is_primitive<CppAnalogType>>::value>
-template<typename CppAnalogType>
-final class PrimitiveValue : public Value {
-    CppAnalogType payload;
-    virtual const Type& typeof() const override;
-};
 
+
+final class VariableValue : public /*Base*/Value {
+    //// Public Interface
+public:
+    virtual const Type& typeof() const override;
+    //// Private Members
+private:
+    Type type;
+};
 
 
 

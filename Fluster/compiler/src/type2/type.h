@@ -6,6 +6,7 @@
 #include "value.h"
 #include "utils.h"
 #include "identifier.h"
+
 class Type;
 
 namespace Fluster {
