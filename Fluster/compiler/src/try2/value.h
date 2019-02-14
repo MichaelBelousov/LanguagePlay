@@ -7,22 +7,21 @@ namespace Fluster {
 
 
 
-//TODO: rename to AbstractValue?
-class /*Base*/Value {
+class BaseValue {
     //// Public Interface
 public:
-    virtual const Type& typeof() const = 0;
+    virtual const TypePtr typeof() const noexcept = 0;
 };
 
 
 
-final class VariableValue : public /*Base*/Value {
+final class RuntimeValue : public BaseValue {
     //// Public Interface
 public:
-    virtual const Type& typeof() const override;
+    const TypePtr typeof() const override;
     //// Private Members
 private:
-    Type type;
+    TypePtr type;
     //alignment
     //LLVM value
 };

@@ -39,9 +39,9 @@ extern static const TypePtr word;
 
 //TODO: std::enable_if<std::is_scalar<CppAnalogType>>::value>
 template<typename CppAnalogType>
-final class PrimitiveValue : public Value {
+final class PrimitiveValue : public RuntimeValue {
     CppAnalogType payload;
-    virtual const TypePtr& typeof() const override;
+    const TypePtr& typeof() const override;
 };
 
 #define \
