@@ -19,12 +19,11 @@ virtual const Type _Type::typeof() const override {
 
 //// Operators
 
-/*
-bool _Type::operator==(const _Type& other) const {
-    return properties == properties;
+bool operator==(const Type& lhs, const Type& rhs) {
+    return lhs.kind == rhs.kind
+        && lhs.props == rhs.props;
 }
-*/
 
 
 
-};
+}; //namespace Fluster
