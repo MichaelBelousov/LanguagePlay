@@ -99,7 +99,7 @@ class ProjectileMovementComponent
         meth destroy(this): void
             this.owner.release
 
-        @combine_after  //combine_before should exist
+        @before_super //after_super should exist
         meth tick (this, delta: float32): void
             velocity += delta*acceleration
             physics.move(this.projectile, 
