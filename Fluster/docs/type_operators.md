@@ -14,6 +14,13 @@ r2: & = x
 p: *int = #x
 //structural union
 q: Pickupable | Targetable
+
 //structural intersection (disjunction)
-s: Person & ListNode
+LinkedList<T> = T & {next_node: *T}
+s: LinkedList<Person>
+
+x: ! = 100
+y: []!float = [1.2, 0, 3.4, -1.2e24]
+horror: &[]!float = y
+better: & = y
 ```
