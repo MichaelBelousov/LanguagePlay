@@ -5,8 +5,7 @@
 #include <map>
 #include "value.h"
 #include "utils.h"
-#include "conversion.h"
-#include "identifier.h"
+#include "type_aux.h"
 
 namespace Fluster {
 

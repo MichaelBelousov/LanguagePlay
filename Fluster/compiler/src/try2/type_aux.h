@@ -14,6 +14,8 @@ class Type;
 
 
 
+using Identifier = std::string;
+
 using PropertyTable = Dict<Identifier, Value>;
 
 using FunctionTable = Dict<Identifier, Function>;
