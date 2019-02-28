@@ -38,14 +38,12 @@ namespace MathUtil :: TriangleArea ( $base, $height { $
 
 Replace a common sequence with an object
 ```Cpp
-std::vector * $vec ; $vec . reserve ( $amt
+`std::vector $vec ; $vec.reserve($amt)`
 >>>
-ReservingVector ( $amt
-\`\`\` //the supplement
-### FILE($vec)
+ReservingVector ( $amt,
+;
 namespace util :: class ReservingVector : private std::vector \
-    ( amount { `this.reserve`
-\`\`\`
+    ( std::size_t amount, { `this.reserve(amount);`
 ```
 <!--
 how are will I assert the file location of transformations?
@@ -63,3 +61,19 @@ how can it be reasoned that we're dealing only with the life of $vec,
 and ignoring any things that don't mutate it ocurring between those two
 statements?
 -->
+
+change template 2nd argument from pointer to reference
+
+\?name(cap) stores whether there was or wasn't 
+the optional element in the capture
+!, (!, are invocations of a declaration
+
+```
+struct InputKey < , ?b(const) std::string *  $param
+>>>
+struct InputKey < , ?b(const) std::string & $param
+;
+InputKey <! , `\?dref(&)$param`
+>>>
+InputKey <! , `\?!dref(*)$param`
+```
