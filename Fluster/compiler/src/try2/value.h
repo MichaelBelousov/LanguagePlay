@@ -1,9 +1,10 @@
 #ifndef FLUSTER_COMPILER_VALUE
 #define FLUSTER_COMPILER_VALUE
 
-class Type;
-
 namespace Fluster {
+
+struct Type;
+using TypePtr = std::shared_ptr<Type>;
 
 
 
@@ -15,10 +16,10 @@ public:
 
 
 
-final class RuntimeValue : public BaseValue {
+class RuntimeValue final : public BaseValue {
     //// Public Interface
 public:
-    const TypePtr typeof() const override;
+    const TypePtr typeof() const noexcept override final;
     //// Private Members
 private:
     TypePtr type;

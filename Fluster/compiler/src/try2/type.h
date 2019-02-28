@@ -15,18 +15,28 @@ class Type;
 
 using TypePtr = std::shared_ptr<Type>;
 
-class Type : public BaseValue {
+    class Type : public BaseValue {
 
-//// Public Types
-public:
-    enum class Kind;
-    namespace Builder;
+    //// Public Types
+    public:
+    enum class Kind : uint8_t {
+        meta,
+        class_,
+        struct_,
+        primitive  //scalar
+        //nil
+    };
+    namespace Builder {
+        TypePtr Class();
+        TypePtr Struct();
+        TypePtr Custom(Kind in_kind);
+    };
     friend ConversionTable; friend FunctionTable;
 
 //// Public Interface
 public:
     virtual TypePtr cloneof() const noexcept;
-    const TypePtr typeof() const override;
+    const TypePtr typeof() const noexcept override;
     const bool is(TypePtr other) const noexcept;
     const bool has(TypePtr other) const noexcept;
 
@@ -49,19 +59,7 @@ private:
 };
 
 
-enum class Type::Kind : /*public*/ uint8_t {
-    meta,
-    class_,
-    struct_,
-    primitive  //scalar
-    //nil
-};
 
-namespace Type::Builder {
-    static TypePtr Class();
-    static TypePtr Struct();
-    static TypePtr Custom(Properties properties, Type::Kind in_kind);
-};
 
 
 

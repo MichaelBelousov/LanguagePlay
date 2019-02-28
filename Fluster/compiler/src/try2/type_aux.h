@@ -6,6 +6,7 @@
 #include <map>
 #include "utils.h"
 #include "type.h"
+#include "func.h"
 
 
 namespace Fluster {

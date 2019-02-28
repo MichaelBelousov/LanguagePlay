@@ -2,6 +2,7 @@
 #define FLUSTER_COMPILER_UTILS
 
 #include <map>
+#include <unordered_map>
 #include <string>
 
 namespace Fluster {
@@ -9,7 +10,7 @@ namespace Fluster {
 
 
 template<typename ...Args>
-using Dict = unordered_map<...Args>;
+using Dict = std::unordered_map<...Args>;
 
 using Identifier = std::string;
 
