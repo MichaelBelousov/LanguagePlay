@@ -11,44 +11,43 @@ namespace Fluster {
 /* Primitive types */
 
 //metatype primitive
-extern static const TypePtr TheType;
+extern const TypePtr TheType;
 
 //integer primitive types
-extern static const TypePtr int8;
-extern static const TypePtr int16;
-extern static const TypePtr int32;
-extern static const TypePtr int64;
-extern static const TypePtr& int_ = int32;
+extern const TypePtr int8;
+extern const TypePtr int16;
+extern const TypePtr int32;
+extern const TypePtr int64;
+extern const TypePtr& int_;// = int32;
 //unsigned integer primitive types
-extern static const TypePtr uint8;
-extern static const TypePtr uint16;
-extern static const TypePtr uint32;
-extern static const TypePtr uint64;
-extern static const TypePtr& uint = uint32;
+extern const TypePtr uint8;
+extern const TypePtr uint16;
+extern const TypePtr uint32;
+extern const TypePtr uint64;
+extern const TypePtr& uint;// = uint32;
 
 //floating point primitive types
-extern static const TypePtr float32;
-extern static const TypePtr float64;
-extern static const TypePtr& float_ = float32;
+extern const TypePtr float32;
+extern const TypePtr float64;
+extern const TypePtr& float_;// = float32;
 
 //raw types
-extern static const TypePtr bit;
-extern static const TypePtr byte;
-extern static const TypePtr word;
+extern const TypePtr bit;
+extern const TypePtr byte;
+extern const TypePtr word;
 
 
 //TODO: std::enable_if<std::is_scalar<CppAnalogType>>::value>
 template<typename CppAnalogType>
-final class PrimitiveValue : public RuntimeValue {
+class PrimitiveValue final : public BaseValue {
     CppAnalogType payload;
-    const TypePtr& typeof() const override;
+    const TypePtr typeof() const noexcept final;
 };
 
-#define \
-    DEF_PRIMITIVE(ctype, real) \
-    const TypePtr& \
-    PrimitiveValue<(ctype)>:: \
-    typeof() const \
+#define DEF_PRIMITIVE(ctype, real) \
+    const TypePtr \
+        PrimitiveValue<(ctype)>:: \
+    typeof() const noexcept final \
 { \
     return (real); \
 }

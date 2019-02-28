@@ -8,18 +8,18 @@ namespace Fluster {
 //// Public Interface 
 
 //return a clone
-virtual Type _Type::cloneof() const {
+TypePtr Type::cloneof() const {
     return Type(*this);
 }
 
 //return the type of types, TheType
-virtual const Type _Type::typeof() const override {
+const TypePtr Type::typeof() const override {
     return TheType;
 }
 
 //// Operators
 
-bool operator==(const Type& lhs, const Type& rhs) {
+bool operator==(const TypePtr& lhs, const TypePtr& rhs) {
     return lhs.kind == rhs.kind
         && lhs.props == rhs.props;
 }

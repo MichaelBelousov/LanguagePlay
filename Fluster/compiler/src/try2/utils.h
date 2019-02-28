@@ -10,7 +10,7 @@ namespace Fluster {
 
 
 template<typename ...Args>
-using Dict = std::unordered_map<...Args>;
+using Dict = std::unordered_map<Args...>;
 
 using Identifier = std::string;
 

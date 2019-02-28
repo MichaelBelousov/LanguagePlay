@@ -16,10 +16,11 @@ public:
 
 
 
-class RuntimeValue final : public BaseValue {
+// XXX: final???
+class RuntimeValue : public BaseValue {
     //// Public Interface
 public:
-    const TypePtr typeof() const noexcept override final;
+    const TypePtr typeof() const noexcept final;
     //// Private Members
 private:
     TypePtr type;

@@ -13,12 +13,15 @@ class Type;
 
 
 
+
 using TypePtr = std::shared_ptr<Type>;
 
-    class Type : public BaseValue {
+class Type : public BaseValue {
 
     //// Public Types
-    public:
+public:
+    friend ConversionToTable;
+    friend FunctionTable;
     enum class Kind : uint8_t {
         meta,
         class_,
@@ -26,34 +29,35 @@ using TypePtr = std::shared_ptr<Type>;
         primitive  //scalar
         //nil
     };
-    namespace Builder {
-        TypePtr Class();
-        TypePtr Struct();
-        TypePtr Custom(Kind in_kind);
+    // TODO: can you nest namespaces in a class?
+    struct Builder final {
+        static TypePtr Class();
+        static TypePtr Struct();
+        static TypePtr Custom(Kind in_kind);
     };
-    friend ConversionTable; friend FunctionTable;
 
-//// Public Interface
+    //// Public Interface
 public:
     virtual TypePtr cloneof() const noexcept;
     const TypePtr typeof() const noexcept override;
     const bool is(TypePtr other) const noexcept;
     const bool has(TypePtr other) const noexcept;
 
- 
-//// Construction
+
+    //// Construction
 public:
     Type();
-    
-//// Private Fields
+
+    //// Private Fields
 private:
     Kind kind;
     PropertyTable props;
-    ConversionTable conv_tbl;
+    ConversionToTable conv_tbl;
     FunctionTable meth_tbl;
     FunctionTable func_tbl;
 
-//// Operators
+    //// Operators
+public:
     friend bool operator==(const Type& lhs, const Type& rhs) noexcept;
 
 };
