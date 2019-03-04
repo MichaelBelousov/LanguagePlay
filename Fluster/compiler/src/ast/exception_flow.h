@@ -1,5 +1,5 @@
-#ifndef FLUSTER_COMPILER_AST_FUNCTION
-#define FLUSTER_COMPILER_AST_FUNCTION
+#ifndef FLUSTER_COMPILER_AST_EXCEPTION_FLOW
+#define FLUSTER_COMPILER_AST_EXCEPTION_FLOW
 
 #include <utility>
 #include <vector>
@@ -20,17 +20,10 @@ struct FunctionDef : public NamedDef
                    , public PtrType<FunctionDef> {
 //// Fields
     const std::vector<ParamDef::Ptr> params;
-    const Expr::Ptr return_type;
+    const Expr::Ptr type;
     const std::vector<Statement::Ptr> body;
 };
 
-struct FunctionDef : public NamedDef
-                   , public PtrType<FunctionDef> {
-//// Fields
-    const std::vector<ParamDef::Ptr> params;
-    const Expr::Ptr return_type;
-    const std::vector<Statement::Ptr> body;
-};
 
 
 }; };

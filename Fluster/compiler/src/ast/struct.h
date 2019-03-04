@@ -10,7 +10,7 @@ namespace fluster { namespace ast {
 
 
 
-struct StructDef : public Def {
+struct StructDef : public NamedDef {
 //// Types
     using Ptr = std::shared_ptr<StructDef>;
 //// Fields
@@ -22,7 +22,7 @@ struct StructDef : public Def {
     const std::vector<const ConversionDef::Ptr> conversions;
     const std::vector<const OperationDef::Ptr> operations;
 //// Private Fields
-    const fluster::data::Struct::Ptr underlying;
+    const fluster::rt::Struct::Ptr underlying;
 };
 
 

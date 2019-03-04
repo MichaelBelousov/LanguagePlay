@@ -1,10 +1,10 @@
 #ifndef FLUSTER_COMPILER_AST_BASE
 #define FLUSTER_COMPILER_AST_BASE
 
-#include <memory>
 #include <array>
 #include <string>
 #include <vector>
+#include "ast/util.h"
 
 namespace fluster { namespace ast {
 
@@ -25,17 +25,20 @@ struct _blah<standard> { member; };
 
 using Name = std::string;
 
-enum class ExprType {
-};
-
-struct Def {
-    using Ptr = std::shared_ptr<Def>;
+struct Def : public PtrType<Def> {
     Def::Ptr next;
     //ScopePtr _outer;
+};
+
+using Statement = Def;
+
+struct NamedDef : public Def
+                , public PtrType<Def> {
+    const Name name;
 }
 
-struct Expr {
-    using Ptr = std::shared_ptr<Expr>;
+struct Expr : public PtrType<Def> {
+    const fluster::rt::Operation::Ptr underlying;
 };
 
 template<int N>
@@ -64,9 +67,6 @@ struct TernaryOperator : public NaryOperator<3> {
 struct InvokeOperation : public Operator {
     std::vector<Expr::Ptr> arguments;
     Expr::Ptr invokee;
-};
-
-struct Name {
 };
 
 
