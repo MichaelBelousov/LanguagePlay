@@ -1,7 +1,7 @@
 #ifndef FLUSTER_COMPILER_VALUE
 #define FLUSTER_COMPILER_VALUE
 
-namespace Fluster {
+namespace fluster {
 
 struct Type;
 using TypePtr = std::shared_ptr<Type>;

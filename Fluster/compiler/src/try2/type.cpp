@@ -1,7 +1,7 @@
 #include "type.h"
 #include "primitives.h"
 
-namespace Fluster {
+namespace fluster {
 
 
 
@@ -26,4 +26,4 @@ bool operator==(const TypePtr& lhs, const TypePtr& rhs) {
 
 
 
-}; //namespace Fluster
+}; //namespace fluster

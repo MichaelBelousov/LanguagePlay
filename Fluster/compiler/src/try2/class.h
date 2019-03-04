@@ -4,7 +4,7 @@
 
 #include "type.h"
 
-namespace Fluster {
+namespace fluster {
 
 
 

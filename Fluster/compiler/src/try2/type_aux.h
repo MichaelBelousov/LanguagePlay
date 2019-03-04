@@ -9,7 +9,7 @@
 #include "function.h"
 
 
-namespace Fluster {
+namespace fluster {
 
 class Type;
 using TypePtr = std::shared_ptr<Type>;
@@ -49,6 +49,6 @@ public:
 
 
 
-}; //namespace Fluster
+}; //namespace fluster
 
 #endif //FLUSTER_COMPILER_TYPE_TABLES

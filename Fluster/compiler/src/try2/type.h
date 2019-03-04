@@ -7,7 +7,7 @@
 #include "utils.h"
 #include "type_aux.h"
 
-namespace Fluster {
+namespace fluster {
 
 class Type;
 
@@ -67,6 +67,6 @@ public:
 
 
 
-}; //namespace Fluster
+}; //namespace fluster
 
 #endif //FLUSTER_COMPILER_TYPE

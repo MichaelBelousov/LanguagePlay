@@ -5,7 +5,7 @@
 
 class Type;
 
-namespace Fluster {
+namespace fluster {
 
 
 

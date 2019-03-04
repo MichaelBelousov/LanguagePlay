@@ -3,7 +3,7 @@
 
 #include "value.h"
 
-namespace Fluster {
+namespace fluster {
 
 
 
