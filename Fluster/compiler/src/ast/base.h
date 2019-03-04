@@ -6,16 +6,31 @@
 #include <string>
 #include <vector>
 
-namespace Fluster { namespace ast {
+namespace fluster { namespace ast {
 
 
+
+// TODO: compiler is all about verbosity, this
+// setting is for the future when the compiler
+// can have a skim milk mode
+/*
+enum class Verbosity {
+    none,
+    standard
+};
+template<Verbosity verbosity = none>
+struct _blah {};
+struct _blah<standard> { member; };
+*/
+
+using Name = std::string;
 
 enum class ExprType {
 };
 
-struct Declaration {
-    using Ptr = std::shared_ptr<Declaration>;
-    DeclarationPtr next;
+struct Def {
+    using Ptr = std::shared_ptr<Def>;
+    Def::Ptr next;
     //ScopePtr _outer;
 }
 

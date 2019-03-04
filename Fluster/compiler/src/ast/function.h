@@ -10,11 +10,15 @@ namespace fluster { namespace ast {
 
 
 
-struct FunctionDef : public Type {
+struct ParamDef : public Def {
+}
+
+struct FunctionDef : public Def {
 //// Types
-    using Ptr = std::shared_ptr<Struct>;
+    using Ptr = std::shared_ptr<FunctionDef>;
 //// Fields
-    const std::vector<> params;
+    const Name name;
+    const std::vector<ParamDef> params;
 };
 
 
