@@ -8,23 +8,20 @@ namespace fluster { namespace ast {
 
 
 
-struct ParamDef : public NamedDef
-                , PtrType<ParamDef> {
-    const Expr::Ptr type;
-    const Expr::Ptr default_;
+struct CatchBlock : public Statement
+                  , public PtrType<ConditionalBlock> {
+    const Expr::Ptr exception_type;
+    const std::vector<const Statement::Ptr> body;
 };
 
-
-struct FunctionDef : public NamedDef
-                   , public PtrType<FunctionDef> {
-//// Fields
-    const std::vector<ParamDef::Ptr> params;
-    const Expr::Ptr type;
-    const std::vector<Statement::Ptr> body;
+struct TrialBlock : public Expr {
+    const std::vector<const Statement::Ptr> body;
+    const std::vector<const CatchBlock::Ptr> catches;
+    const std::vector<const Statement::Ptr> else_body;
 };
 
 
 
 }; };
 
-#endif //FLUSTER_COMPILER_AST_FUNCTION
+#endif //FLUSTER_COMPILER_AST_EXCEPTION_FLOW
