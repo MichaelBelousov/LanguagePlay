@@ -9,12 +9,14 @@ namespace fluster { namespace ast {
 
 
 
-struct StringLiteral {
+struct Literal : public Expr {};
+
+struct StringLiteral : public Literal {
     std::string value;
 };
 
-struct FloatLiteral {
-    std::string value;
+struct FloatLiteral : public Literal {
+    float value;
 };
 
 

@@ -1,7 +1,6 @@
 #ifndef FLUSTER_COMPILER_AST_EXCEPTION_FLOW
 #define FLUSTER_COMPILER_AST_EXCEPTION_FLOW
 
-#include <utility>
 #include <vector>
 #include "ast/base.h"
 
