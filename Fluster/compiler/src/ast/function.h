@@ -4,16 +4,13 @@
 #include <utility>
 #include <vector>
 #include "ast/base.h"
+#include "ast/variable.h"
 
 namespace fluster { namespace ast {
 
 
 
-struct ParamDef : public NamedDef
-                , PtrType<ParamDef> {
-    const Expr::Ptr type;
-    const Expr::Ptr default_;
-};
+struct ParamDef : public VariableDef, PtrType<ParamDef> {};
 
 
 struct FunctionDef : public NamedDef
