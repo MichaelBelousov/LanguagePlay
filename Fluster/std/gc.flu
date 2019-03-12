@@ -1,0 +1,61 @@
+
+/*
+ * Importable Garbage Collector madness
+ *
+ * the idea is a no-magic language-internal imported gc
+ * written in Fluster
+ */
+
+lg2, floor_base2 = ...import('math')
+//floor_base2 := f(17) => 16, c(31) => 16,
+//               f(32) => 32, c(33) => 32
+
+//maybe not return a pointer but return
+struct ptr<T: is GCedType> //T: Class?
+    enum Colors
+        white = 0b00; gray = 0b01; black = 0b10
+    op init(this)
+        return ptr<*>._ops.init(this) 
+    meth free_bits_mask(this)
+        bit_amt: int = lg2(floor_base2(alignof T))
+        return (0b1 << bit_amt) - 1
+    meth color_white(this)
+        this &= Colors.white
+    meth color_gray(this)
+        this &= Colors.gray
+    meth color_black(this)
+        this &= Colors.black
+    meth get_color(this): Color
+        //yeesh which direction are bits?
+        //sign extension?
+        //do bit masks increase or decrease in size?
+        return (free_bits_mask(this) & this)[0..2]
+        //preconditions?
+        //promise that these bytes are castable to enum?
+    op access_address (this): ptr<typeof this>
+        return ~free_bits_mask(this) & this
+
+// schedule STW:
+
+
+scopoe
+    running = False
+
+    @after(_ops.interrupt)
+    op post_os_interrupt(): void
+        // set min os alert (will cause os_interrupt lol)
+        // should probably add more handling to see if alert is still
+        // present
+        if not running \ os.alert(100)  // alert in 100 ms
+        with temp_val(Running, true)
+            stop_the_world()
+
+// way too much side effect usage right now...
+// need a static convention for modules to declare side effects that
+// are incompatible
+// actually conflicting pointer specializations might be ok
+// could require opt in via metaclasses
+
+// export all public definitions
+export *;
+
