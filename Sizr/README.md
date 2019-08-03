@@ -77,3 +77,9 @@ InputKey <! , `\?dref(&)$param`
 >>>
 InputKey <! , `\?!dref(*)$param`
 ```
+
+```
+@FILE 'header.cpp'
+:: namespace blah
+:: func hello
+```
