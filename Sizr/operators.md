@@ -54,7 +54,7 @@ Captures are the various ways of designating a capture, the `name` part is alway
 
 --------------------------
 
-## Query Operators
+## Nesting Operators
 
 | | | example |
 |-------------------------|-----------|--|
@@ -69,6 +69,15 @@ Captures are the various ways of designating a capture, the `name` part is alway
 | `,`  | next argument query | `print_debug ( arg1, $arg2` |
 | `@`  | decorator query | `with_db @ class $` |
 | `#`  | directive query | `class util { ifdef PLATFORM_MAC # $ (` |
+
+--------------------------
+
+## Other Query Operators
+
+| | | example |
+|-------------------------|-----------|--|
+| `=`  | set property value | `class MyClass . type=int $` |
+| `!`  | property is false/undefined | `class MyClass . !virtual $` |
 
 --------------------------
 
