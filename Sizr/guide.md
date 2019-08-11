@@ -1,5 +1,5 @@
 
-# Tutorial
+# Guide
 
 ## _Scope Expressions_ and _Properties_
 
@@ -65,9 +65,9 @@ A function named `begin` in a struct named `ListNode` in a class named `LinkedLi
 namespace data . class LinkedList . struct ListNode . func begin
 ```
 
-A function named `print` with at least two arguments, respectively named `arg1` and `arg2`.
+A function named `print` with an argument named myArgument
 ```
-print ( arg1 , arg2
+print ( myArgument
 ```
 
 The struct named `MyStruct` following a template `MyTemplate` with an argument `ContainedType`
@@ -123,6 +123,26 @@ Capture an identifier in the global scope that is a class named `MyClass`:
 . class MyClass
 ```
 
+### specially linked scopes
+
+
+Some scopes have special links to other scopes. For instance, the argument scope of a construct is still linked to the implementation scope. So the following
+query looks for the implementation of the function `myFunction`, not for the implementation of its argument `myArgument`:
+```
+myFunction ( myArgument {
+```
+
+This also applies specifically to the per-argument nesting operators, `,`, which allows you to access the next per-argument scope, and still allows you to 
+refer to the parent construct's implementation and members. For instance, take this query that selects a C++ templated type, `List`, with a second template argument
+named `Type`, and having a nested struct named `IteratorType`
+```
+List < , , Type . struct IteratorType
+```
+We have 5 scope expressions there. The first finds an identifier named `List`. The second is an argument scope wildcard, the third is an empty per-argument scope
+expression (the first argument), and the fourth is a second per-argument scope for an identifier named `Type`. Finally, the last scope expression refers to the
+member scope of the original `List` template, and specifies a struct named IteratorType there.
+
+
 ## _Captures_
 
 
@@ -133,9 +153,14 @@ specific properties. We do this with the power of _captures_.
 
 Captures specify another wild card in the code, but this time we can specify properties on the wildcard, and even give the capture a name
 for future reference. Let's start simply:
-
 ```
 class $
+```
+
+
+Any empty scope expression is equivalent to an unnamed capture:
+```
+class MyClass . myFunction ( $
 ```
 
 The `$` is the common denominator of all capture operators; alone, it is an unnamed capture, which is a lot of like a wildcard because
@@ -150,29 +175,89 @@ class $captured_class
 That query matches every class in the source, but the capture can be referred to by that name, `captured_class` later.
 
 
-Here are all of the capture types, some of which we'll go over later:
-- `$name` identifier capture
-- `$_name` whitespace capture
-- `$%name` operator capture
-- `$/pattern/name` regex capture
-- ```$``name ``` expression capture
-- ```$!``name ``` arithmetically equivalent expression capture
-- `$...name` operator pack capture
-- `$name.property` capture property access
+Here are all of the capture types, some of which we'll go over:
+- `$NAME` identifier capture
+- `$/pattern/NAME` regex capture
+- `$_NAME` whitespace capture
+- `$%NAME` operator capture
+- `$...NAME` operator fold capture
+
+
+The first special capture is the regex capture, which allows you to do needlessly complex regular expression matching for
+identifiers. For instance, select all functions prefixed with `log_`. Later we'll use that selection to extract those functions
+to a Logger class, and we'll finally be using Sizr for real.
+```
+$/log_.*/ (
+```
+In that query, we're capturing all identifiers that match the regular expression `log_.*`, and have a runtime argument scope.
+So in our current program's source, we'd be capturing functions such as `log_debug`, `log_warning`, and `log_error`.
+
+
+You can use multiple capture operators to capture nested forms.
+Here we capture all constant member variables of subclasses of `Shape`, and capture the class they are in.
+```
+class $captured_class : Shape . const var $captured_member
+```
+The most deeply nested capture is what's actually captured, while the previous captures are parent captures.
+
+<!--
+Create an image here illustrating source scopes
+-->
+
+We'll ignore the remaining capture operator types for now.
 
 
 ## _Assertions_
 
 
+There is a thing about these queries, they're not just selectors. They're also _assertions_.
+Queries are a double sided tool, because in Sizr, in some contexts, a query is used as an assertion.
+Assertions use the language backend to write changes based on properties and scope expressions.
+
+
+Let's suppose we have a class, `MyClass`, with abstract (pure virtual) functions in C++, which we would select
+with the following query:
+```
+class MyClass . abstract $ (
+```
+
+
+Then we write an assertion that makes all functions in `MyClass` concrete:
+```
+class MyClass . !abstract $ (
+```
+
+
+In an asserting context, the language backend will write back to the source the transformation of removing the
+abstract property. It's language-dependent, but in C++ that will probably involve removing any implementation
+and setting the function declaration equal to 0 as is customary in C++.
+
+
+Already you can probably see that we need to combine selectors and assertions, and that's where we finally
+get to the main, and broadest element of Sizr, _transformations_.
+
+
 ## _Transformations_
+
+
+Transformers help us use selectors to capture constructs, and then reference those captures in assertions.
+
+
+### _Chaining_
+
+`;;;`
 
 
 ### _Destructive transformations_
 
+`>>!`
 
 ### _Markers_
 
+
 Markers allow your queries to query locations. They are versatile and essential even, in some languages.
 
+
+### Source Mode
 
 
