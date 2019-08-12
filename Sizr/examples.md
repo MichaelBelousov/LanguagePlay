@@ -35,7 +35,9 @@ MyClass . $captured_func (
 #### Move a class to a new namespace
 
 ```
-class MyClass
+. class MyClass
+>>!
+namespace MyNamespace . MyClass
 ```
 
 -----------------------
@@ -48,14 +50,17 @@ class MyClass
 
 #### Replace all `+` concatenated strings with formatted multiline strings
 
+Example:
 ```JavaScript
 let hello = 'world ' + 5 + ' yum';
-let _hello = `world ${5} yum`;
+//is replaced with:
+let hello = `world ${5} yum`;
 ```
 
+Query:
 ```
 ## directives for simpler conversion
-#=str   std::string
+#=str   String
 #$a     conversions.includes=str op.add.ret.type=str
 
 ## transformation
