@@ -1,0 +1,9 @@
+[
+  "class": "$CLASS $NAME $FINALITY @%>30 { @| // public: @!> [@< $FUNCTIONS(FUNCTIONS=public)] [ @> @!< }",
+  // class[space]name[space]final[if col is >30, break to next line]{[at col 0]public[indent from {]:
+  // [] is for array variables?
+  // markers swallow the whitespace around them, you'll need to use a \ to get whitespace tracked again
+]
+
+//need a way to push and pop indentation flow!
+//(@!, @!>, @!<, @!|) is a temporary change

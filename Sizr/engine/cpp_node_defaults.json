@@ -1,0 +1,22 @@
+[
+  "class": {
+    "final": false,
+    "access": "private",
+    "parents": [],
+    "functions": [],
+    "members": [],
+    "static_members": [],
+    "nested_types": [],
+    "constructors": [],
+    "destructor": null,
+  },
+  "constructor": {
+    "constexpr": false,
+    "member_initializers": [],
+    "noexcept": false,
+    "explicit": false,
+    "explicitly_defaulted": false,
+    "defaulted": true,
+    "deleted": false,
+  }
+]
