@@ -87,7 +87,7 @@ $first #rest.len>0?"," #wraps?"\n":\ " " $rest
 
 binary_op:
 '''
-$left \?" " $op $right
+$left \?" " > "  " $op " " $right
 '''
 
 ```
@@ -115,6 +115,7 @@ func_args:
   it can also be followed by a ternary expression based on whether it was or wasn't inserted, e.g. `\?"x":"xy"`
 * the `#\1` condition where 1 could be replaced with any number is a backreference to the expressions'
   wrap breaks. It yields true if a break was inserted at that wrap break.
+* the `>` operator asserts the indentation level to the previous lines'
 
 
 <!-- //how to allow?
