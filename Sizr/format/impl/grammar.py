@@ -9,9 +9,20 @@ pyparsing.ParserElement.inlineLiteralsUsing(Suppress)
 from functools import reduce
 from operator import or_
 
+class Break:
+    def __init__(self, index, wrapped):
+        self.index = index
+        self.wrapped = wrapped
+
+class NodeParseContext:
+    def __init__(self, wraps):
+        self.wraps: bool = wraps
+        self.breaks: (list, Break) = []
+
 class Node:
-    def __init__(self, src):
-        self.src = src
+    def __init__(self, parsed):
+        self.src = parsed
+        #self.ctx = ctx
 
 class ContextKey(Node):
     pass
