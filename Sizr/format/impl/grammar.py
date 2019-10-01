@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 '''
 Sizr formatter proof of concept
 '''
@@ -22,10 +21,11 @@ class NodeParseContext:
 class Node:
     def __init__(self, parsed):
         self.src = parsed
-        #self.ctx = ctx
 
 class ContextKey(Node):
-    pass
+    def __init__(self, parsed):
+        self.key = parsed
+        super().__init__(parsed)
 
 p_ident = WordStart(alphas+'_') + Word(alphanums+'_')
 
