@@ -6,18 +6,43 @@ Sizr formatter proof of concept
 import pyparsing
 from pyparsing import *
 pyparsing.ParserElement.inlineLiteralsUsing(Suppress)
+from functools import reduce
+from operator import or_
+
+class Node:
+    def __init__(self, src):
+        self.src = src
+
+class ContextKey(Node):
+    pass
 
 p_ident = WordStart(alphas+'_') + Word(alphanums+'_')
-p_int = Word(nums)
 
-p_ref = Group('$' + p_ident)
+p_ref = ('$' + p_ident).setParseAction(ContextKey)
 
 p_quote = QuotedString('"', escChar='\\')
 
+p_atom = p_quote | Word(printables)
+
+p_eq_expr = (
+    reduce ( or_
+           , map( lambda op: ( p_atom                   ('lhs')
+                             + Suppress(Literal(op))    ('op')
+                             + p_atom                   ('rhs')
+                             )
+                , ['<', '<=', '=', '!=', '>', '>=']
+                )
+           )
+)
+
+p_expr = ( p_eq_expr
+         | p_atom
+         )
+
 #TODO: temp definition
 p_cond_expr = CharsNotIn('?')
-p_then_expr = CharsNotIn(':')
-p_othw_expr = Word(printables)
+p_then_expr = p_expr
+p_othw_expr = p_atom
 
 p_then = Group('?' + p_then_expr)
 p_otherwise = Group(':' + p_othw_expr)
@@ -33,19 +58,18 @@ p_break = Group( '\\'
                + Optional(p_otherwise)   ('otherwise')
                )
 
+# rename to p_else or p_any...?
 p_literal = Word(printables)
 
 # need a better name than a "write"
 p_writes = ( p_ref
            | p_cond
            | p_break
-           | p_quote
+           | p_quote  #p_expr
            | p_literal
            )
 
 p_src = ZeroOrMore(p_writes)
-
-#p_else  #all other possible write expressions
 
 p_node_decl = ( p_ident
               + ':'

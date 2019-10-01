@@ -3,15 +3,17 @@
 from importlib import reload
 import grammar
 from grammar import parse
-from sys import stdin
+import sys
 import code
 
 def repl_line():
     line = input('FORMAT> ')
-    if line == 'reload':
+    if line == 'RELOAD':
         reload(grammar)
         global parse
         parse = grammar.parse
+    elif line == 'EXIT':
+        sys.exit()
     elif line:
         result = parse(line)
         print(result)
