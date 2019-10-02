@@ -5,6 +5,8 @@ import grammar
 from grammar import parse
 import sys
 import code
+import argparse
+import python_backend
 
 def repl_line():
     line = input('FORMAT> ')
@@ -19,7 +21,7 @@ def repl_line():
         print(result)
         code.interact(local=locals())
 
-if __name__ == '__main__':
+def repl():
     while True:
         try: 
             repl_line()
@@ -27,3 +29,26 @@ if __name__ == '__main__':
             break
         except Exception as exc:
             print(exc)
+
+if __name__ == '__main__':
+    argparser = argparse.ArgumentParser(description='format a file')
+    argparser.add_argument('destination_paths', nargs='*',
+                           help='paths to destination source files')
+    argparser.add_argument('--interactive', '-i', action='store_true',
+                           help='run the repl instead of on a file')
+    argparser.add_argument('--format-defs', '-d', 
+                           help='the formatting definitions file to use')
+    args = argparser.parse_args()
+
+    if args.interactive:
+        repl()
+
+    with open(args.format_defs) as format_src_file:
+        format_src = format_src_file.read()
+        formats = parse(format_src)
+        for path in args.destination_paths:
+            with open(path) as file:
+                python_backend.format_src(formats,
+                                          file.read())
+
+

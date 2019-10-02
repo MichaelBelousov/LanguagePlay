@@ -33,7 +33,9 @@ class Formatter:
 
     def run(self, ast: ast.AST):
         """run the formatter over the given AST"""
-        for node in ast: self._visit(node)
+        for node in ast:
+            code.interact(local=locals())
+            self._visit(node)
         return self._formatted
 
     def __call__(self, ast):
@@ -42,5 +44,5 @@ class Formatter:
 def format_src(table, src):
     """format python source """
     tree = ast.parse(src)
-    Formatter(table).run(src)
+    Formatter(table).run(tree)
     print(result.dump())

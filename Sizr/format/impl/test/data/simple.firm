@@ -1,0 +1,9 @@
+FunctionDef:
+'''
+def $name ( $args ) : "\n"
+> $body
+'''
+
+Pass: ' pass '
+
+String: ' """ $val """ '
