@@ -19,15 +19,18 @@ def repl_line():
     elif line:
         result = parse(line)
         print(result)
-        code.interact(local=locals())
 
 def repl():
+    import traceback
     while True:
         try: 
             repl_line()
-        except KeyboardInterrupt as exc:
+        except KeyboardInterrupt:
+            break
+        except EOFError:
             break
         except Exception as exc:
+            traceback.print_exc()
             print(exc)
 
 if __name__ == '__main__':
