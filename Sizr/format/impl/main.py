@@ -8,6 +8,8 @@ import code
 import argparse
 import python_backend
 
+"t: '\" \"cd '"
+
 def repl_line():
     line = input('FORMAT> ')
     if line == 'RELOAD':
@@ -16,9 +18,13 @@ def repl_line():
         parse = grammar.parse
     elif line == 'EXIT':
         sys.exit()
+    elif line == 'PYTHON':
+        code.interact(local={**globals(), **locals()})
     elif line:
         result = parse(line)
         print(result)
+        code.interact(local=locals())
+
 
 def repl():
     import traceback

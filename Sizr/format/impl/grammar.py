@@ -4,7 +4,7 @@ Sizr formatter proof of concept
 
 import pyparsing
 from pyparsing import *
-pyparsing.ParserElement.inlineLiteralsUsing(Suppress)
+# pyparsing.ParserElement.inlineLiteralsUsing()
 from functools import reduce
 from operator import or_
 
@@ -32,17 +32,14 @@ class ContextKey(Node):
 p_ident = WordStart(alphas+'_') + Word(alphanums+'_')
 p_ident.setName('identifier')
 
-p_ref = ('$' + p_ident).setParseAction(ContextKey)
+p_ref = (Suppress('$') + p_ident).setParseAction(ContextKey)
 p_ref.setName('context reference')
 
 p_quote = QuotedString('"', escChar='\\')
 p_quote.setName('quote')
 
-# rename to p_else or p_any...?
-p_literal_text = ( CharsNotIn("'")
-                 | ( "\\"
-                   + Word("'")
-                   )
+p_literal_text = ( Word(printables.replace("'",''))
+                 | r"\'"  # TODO: put back the "'"
                  )
 p_literal_text.setName('literal text')
 
@@ -76,20 +73,20 @@ p_then_expr.setName('then body')
 p_othw_expr = p_atom.copy()
 p_othw_expr.setName('otherwise body')
 
-p_then = Group('?' + p_then_expr)
+p_then = Group(Suppress('?') + p_then_expr)
 p_othw_expr.setName('then expression')
 
-p_otherwise = Group(':' + p_othw_expr)
+p_otherwise = Group(Suppress(':') + p_othw_expr)
 p_othw_expr.setName('otherwise expression')
 
-p_cond = Group( '#'
+p_cond = Group( Suppress('#')
               + p_cond_expr             ('cond')
               + Optional(p_then)        ('then')
               + Optional(p_otherwise)   ('otherwise')
               )
 p_cond.setName('conditional expression')
 
-p_break = Group( '\\'
+p_break = Group( Suppress('\\')
                + Optional(p_then)        ('then')
                + Optional(p_otherwise)   ('otherwise')
                )
@@ -105,7 +102,7 @@ class DynamicParserElement(ParserElement):
     def reset(self, parse_elem):
         self.__parse_elem = parse_elem
 
-# XXX: sorry for using globals, it's just easier in this closed case for now
+# XXX: ew a global, it's just easier in this closed case for now
 # will be replaced, maybe in the proper non-python backend
 currentQuoteMatch = ''
 def setCurrentQuoteMatch(x):
@@ -122,23 +119,38 @@ class FollowedByWithFound(FollowedBy):
         return loc, ret
 
 # need a better name than a "write"
-p_writes = ( p_ref
-           | p_cond
-           | p_break
-           | p_expr
-           # | p_atom
-           )
+p_write = ( p_ref
+          | p_cond
+          | p_break
+          | p_expr
+          )
+p_write.setName('write action')
 
-p_node_src = ZeroOrMore(p_writes)
+p_quote_delim = (
+    Word("'")
+    .setName('quote delimeter')
+    .setParseAction(lambda t: setCurrentQuoteMatch(t[0]))
+)
 
-p_node_decl = ( p_ident
-              + ':'
-              + Word("'").setParseAction(lambda t: setCurrentQuoteMatch(t[0]))
-              + p_node_src
-                # move condition to global
-              + Word("'").addCondition(lambda s,l,t: t[0] == currentQuoteMatch)
+p_node_src = ZeroOrMore( p_write
+                       , stopOn=p_quote_delim  #TODO: allow escaped
+                       )
+p_node_src.setName('node source')
+
+p_node_decl = ( p_ident ('name')
+              + Suppress(':')
+              + Group(
+                ( Suppress(p_quote_delim)
+                + p_node_src
+                + Suppress(
+                    p_quote_delim
+                    .copy()
+                    # move condition to global or dynamic...?
+                    .addCondition(lambda s,l,t: t[0] == currentQuoteMatch)
+                  )
+                ))      ('src')
               )
-p_node_decl.setName('Node Declaration')
+p_node_decl.setName('node declaration')
 
 p_src = ZeroOrMore(p_node_decl)
 
