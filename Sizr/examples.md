@@ -8,18 +8,16 @@
 
 #### Add copyright notice
 
-````
+```sizr
 >>>
 @.
 @^^
+`// Copyright SomeCompany 2019`
 ```
-// Copyright SomeCompany 2019
-```
-````
 
 #### Extract named class methods to interface and implementation
 
-```
+```sizr
 ## Capture members of MyClass ( should better be a class but the query just asks for anything in global scope capable of having members and named "MyClass"
 MyClass . $captured_func (
 ## create a new interface at a path
