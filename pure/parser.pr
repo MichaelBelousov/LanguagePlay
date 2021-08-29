@@ -1,0 +1,85 @@
+# this file is an attempt at using the code-named `pure` language to implement a partial parser
+# for the sizr-format/tree-writer language, it should help the author thinking about this language
+# refine its concepts
+# language names ideas: ore, pore, closed, unify, rune, ruin, clobber
+
+# but how da flick do I declare used types ahead of usage :/
+# you can have multiple type declarations as long as they are compatible (e.g., multiple interface implementations, or use it to declare generic arguments)
+Iter: (Type)[Type]
+Iter = {
+  next: (?$T:Type)
+}
+
+# struct type literal (uses : instead of = to delimit property values)
+# a self-named field (e.g. {Str} would cause weird ambiguities (and context dependence) in the parser), so struct type literals cannot have them
+# this is clearly a type literal, however, tuple type literals would only be possible with context dependence in the parser...
+ParseCtx: Iter[Str] = {
+  src: Str,
+  idx: !u32, # mutable field
+  remaining: (Str),
+  next: (?Str),
+  peek: (?Str), # can probably remove commas in favor of newlines + semicolons, since the last element of a block is always the value (not in types like this)
+}
+
+# looks like names can be either a type or a value (e.g. closure) or both
+# this is a (constructor) function that returns a ParseCtx, and is named ParseCtx
+ParseCtx: (ParseCtx)
+ParseCtx = {
+  src = $src: Str,
+  idx: 0u32,
+}: ParseCtx
+# actually, who even needs an explicit type when you can just have the constructor function and check the type it returns?
+
+union Token = 
+  | Eof
+  | Str Str # explicitly non-tuple types
+  | Indent i32
+  | Outdent i32
+  | Eq
+  | KwNode
+  | LBrace
+  | RBrace
+  | Example [Type1, Type2]
+  
+parseFile: (File)[Str]
+parseFile = (
+  # you can 'declare' your arguments before using them, really just assigning them names
+  src = $1: Str
+  # need to refine syntax
+  # no constructor, just duck typed conversion (will acquire functions after conversion)
+  ctx: ParseCtx = {src, idx=0}
+  # weird return early with monadic none expansion to Err operator
+  # are data-less variants also a value?
+  expect ctx.next[] == Token.KwNode ? "expected 'node' keyword"
+  # using expect to pattern match out values... weird type, sort of like `if let`
+  # using a potential `variant comparison operator`
+  str = expect ctx.next[] := Token.Str ? "expected string"
+  expect ctx.next[] == Token.Eq ? "expected = operator"
+  # is it even possible to get C programmers to use this :/
+  parseWriteCmd[ctx]?
+)
+
+union WriteCmd =
+  | Str str
+  | Indent i32
+  | Outdent i32
+  | Seq Vec[WriteCmd]
+
+# return an optionally Str-if-error WriteCmd (this is short hand for a union: (Err Str | Ok WriteCmd), or some sugar for try-able types)
+parseWriteCmd: (Str?WriteCmd)[ParseCtx]
+parseWriteCmd = (
+  ctx = $1
+  match ctx.next()
+    | Token.Str str -> ()
+    | Token.Indent i -> (WriteCmd.Indent i)
+    | Token.Outdent i -> (WriteCmd.Outdent i)
+    | Token.LBrace -> (
+      cmds = Vec[WriteCmd]
+      while 1 (
+        next = ctx.peek[]
+        # hmmmm this doesn't seem very pure having a break, should try fixing...
+        if next := Token.RBrace (break)
+        cmds.push(parseWriteCmd[]?)
+      )
+    | _ -> (? "unexpected token ${debug(_)}") # unary propagate error?, # who is supposed to deallocate this string if its constructed here?
+)

@@ -13,19 +13,19 @@ similarly to comptime in zig, but using "widened" and "narrowed" types
 ```
 
 ```rust
-# closures
-($1 + $2) # unnamed ordered arguments
-() # empty closure
-# expression chaining operator used
+// closures
+($1 + $2) // unnamed ordered arguments
+() // empty closure
+// expression chaining operator used
 f = ($name, $desc); f(name="hello", desc="world")
 ```
 
 ```rust
 # function/closure types
-f: (i32) # returns int
-f: [i32,i32](i32) # returns int, takes two ints
-f: [x: f32,y: f32](i32) # returns int, takes two named arguments x, y
-# should lead to experimental call/de-lazy/eval/specify args syntax
+f: (i32) // returns int
+f: (i32)[i32,i32] // returns int, takes two ints
+f: (i32){x: f32, y: f32} // returns int, takes two named arguments x, y?
+f: (i32)[i32, f32]{x: f32, y: f32} // returns int, takes two unnamed arguments, and two named arguments
 ```
 
 ```rust
@@ -34,7 +34,7 @@ f: [x: f32,y: f32](i32) # returns int, takes two named arguments x, y
   x = 4 + 4
   x += 3
   y = x + 2
-  x + y # last is returned
+  x + y // last is returned
 )
 ```
 
@@ -71,4 +71,7 @@ assert arr.size[] == 10
 # it's a value. Should check how this integrated with tagged unions/enums, i.e. variant type but still multiple values can exist
 
 # so then after this, how are effects handled? e.g. async/await and monadic early return?
+```
+
+```rust
 ```
