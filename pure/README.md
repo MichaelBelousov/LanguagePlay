@@ -4,6 +4,8 @@
 Basically I want to use a fully variant-based type system with compile-time values for constant folding built into the language
 similarly to comptime in zig, but using "widened" and "narrowed" types
 
+## structs
+
 ```rust
 # struct literal
 {
@@ -11,6 +13,8 @@ similarly to comptime in zig, but using "widened" and "narrowed" types
   size: (5) # closure returning 5
 }
 ```
+
+## closures
 
 ```rust
 // closures
@@ -38,15 +42,30 @@ f: (i32)[i32, f32]{x: f32, y: f32} // returns int, takes two unnamed arguments, 
 )
 ```
 
+## tuples
+
 ```rust
 # tuple syntax
-[1i32,2.0f64, "string literal"]
+[1i32, 2.0f64, "string literal"]
 ```
 
 ```rust
-# constructor?
-# fn arr(T: Type, size: $int) = {
-# }
+map = (
+  $1: Iter
+  fn = $2: ($U: Type)[$T: Type]
+  # haskell cons operator for pattern-matching
+  match $1
+    first :: rest -> fn[first] :: map[rest, fn]
+    _ -> []
+
+)
+# in practice, I think tuple mapping isn't really helpful, better to have an array of a tagged union, to avoid the need for statically overloaded functions
+[1, 2, 3.2]: []float
+```
+
+## constructor stuff
+
+```rust
 # honestly, why even have an `fn` keyword when closures are so easy to make?
 arr = (`${$name} + ${$desc}`)
 
@@ -74,4 +93,49 @@ assert arr.size[] == 10
 ```
 
 ```rust
+# the issue with the closure syntax:
+# what type is being passed to this function?
+f[(4)]
+# is the argument a closure or a value?
+# I suppose, once it is fully bound without arguments, it is implicitly evaluable, which makes it work
+# but what about nested closures, what does $1 reference?
+f[($1 * ($2 + $3)]
+# sure, the `*` operator may not make much sense against a closure, but let's find an example that does...
+# this takes a closure argument and applies two other arguments to it
+($1[$2, $3])
+#looks like you have to alias to use nested args, like aliasing `this` when nesting methods in javascript
+createAddMapper = (
+  add = $1: int
+  ($1 + add)
+)
 ```
+
+## coroutines
+
+I consider coroutines to be important, and relevant to async programming, so how do we make ergonomically yielding closures?
+could just use the yield keyword to start...
+
+```rust
+filter = (
+  $1: Iter
+  $2: (bool)[$T: Type]
+  for item in $1 (
+    if $2[item] (
+      yield item
+    )
+  )
+)
+```
+
+maybe closures that can be rebound somehow?
+
+```rust
+my_closure = (
+  yield 1
+  yield 2
+  yield 3
+)
+
+filter[[1,2,3], my_closure]
+```
+

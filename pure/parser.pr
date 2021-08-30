@@ -10,6 +10,8 @@ Iter = {
   next: (?$T:Type)
 }
 
+# maybe instead of Iter, I should use an un-emptyable list type...?
+
 # struct type literal (uses : instead of = to delimit property values)
 # a self-named field (e.g. {Str} would cause weird ambiguities (and context dependence) in the parser), so struct type literals cannot have them
 # this is clearly a type literal, however, tuple type literals would only be possible with context dependence in the parser...
@@ -50,11 +52,11 @@ parseFile = (
   ctx: ParseCtx = {src, idx=0}
   # weird return early with monadic none expansion to Err operator
   # are data-less variants also a value?
-  expect ctx.next[] == Token.KwNode ? "expected 'node' keyword"
+  expect ctx.next == Token.KwNode ? "expected 'node' keyword"
   # using expect to pattern match out values... weird type, sort of like `if let`
   # using a potential `variant comparison operator`
-  str = expect ctx.next[] := Token.Str ? "expected string"
-  expect ctx.next[] == Token.Eq ? "expected = operator"
+  str = expect ctx.next := Token.Str ? "expected string"
+  expect ctx.next == Token.Eq ? "expected = operator"
   # is it even possible to get C programmers to use this :/
   parseWriteCmd[ctx]?
 )
@@ -69,17 +71,16 @@ union WriteCmd =
 parseWriteCmd: (Str?WriteCmd)[ParseCtx]
 parseWriteCmd = (
   ctx = $1
-  match ctx.next()
+  match ctx.next
     | Token.Str str -> ()
     | Token.Indent i -> (WriteCmd.Indent i)
     | Token.Outdent i -> (WriteCmd.Outdent i)
     | Token.LBrace -> (
-      cmds = Vec[WriteCmd]
-      while 1 (
-        next = ctx.peek[]
-        # hmmmm this doesn't seem very pure having a break, should try fixing...
-        if next := Token.RBrace (break)
-        cmds.push(parseWriteCmd[]?)
+        cmds = Vec[WriteCmd]
+        loop (
+          if ctx.peek := Token.RBrace (break)
+          cmds.push(parseWriteCmd[ctx]?)
+        )
       )
     | _ -> (? "unexpected token ${debug(_)}") # unary propagate error?, # who is supposed to deallocate this string if its constructed here?
 )
