@@ -88,6 +88,11 @@ parseWriteCmd = (
     | _ -> (? "unexpected token ${debug(_)}") # unary propagate error?, # who is supposed to deallocate this string if its constructed here?
 )
 
+# could there be a syntax for 'throwing' try-able errs?
+# we have a syntax for returning on a bad tryable `blah?`
+# but what about throwing? maybe really just the throw expression should construct the outer try-able
+# but then maybe we should have a `resolve` or `return` to return the non-null try-able
+# note, check out zig error sets
 lex: (Str?Token)[ParseCtx]
 lex = (
   match ctx.remaining.at[0]
@@ -97,24 +102,20 @@ lex = (
       | '}' -> (Token.RBrace)
       | '>' -> (
           i = parseInt[ctx.remaining.from[1]]
-          Token.Indent i
+          Ok[Token.Indent i]
         )
       | '<' -> (
-          i = parseInt[ctx.remaining.from[1]]
-          Token.Outdent i
+          i = parseInt [ctx.remaining.from [1]]
+          Ok[Token.Outdent i]
         )
       | '=' -> (Token.Eq)
       | 'n' -> (
-          if ctx.remaining.startsWith["node"] (
-            Token.KwNode
-          ) else (
-            # maybe throw instead of return err?
-            throw ""
-          )
+          if ctx.remaining.startsWith["node"] (Ok(Token.KwNode)) else (Err["unknown token"])
         )
       | '"' -> (
           str = parseString[ctx.remaining]
-          Token.Str str
+          Ok[Token.Str str]
         )
-      | _ -> (throw "unknown token")
+            # should return error instead of throw
+      | _ -> (Err["unknown token"])
 )
