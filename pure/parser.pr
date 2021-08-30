@@ -19,8 +19,8 @@ ParseCtx: Iter[Str] = {
   src: Str,
   idx: !u32, # mutable field
   remaining: (Str),
-  next: (?Str),
-  peek: (?Str), # can probably remove commas in favor of newlines + semicolons, since the last element of a block is always the value (not in types like this)
+  next: (Str?Token),
+  peek: (Str?Token), # can probably remove commas in favor of newlines + semicolons, since the last element of a block is always the value (not in types like this)
 }
 
 # looks like names can be either a type or a value (e.g. closure) or both
@@ -32,7 +32,7 @@ ParseCtx = {
 }: ParseCtx
 # actually, who even needs an explicit type when you can just have the constructor function and check the type it returns?
 
-union Token = 
+Token =
   | Eof
   | Str Str # explicitly non-tuple types
   | Indent i32
@@ -61,7 +61,7 @@ parseFile = (
   parseWriteCmd[ctx]?
 )
 
-union WriteCmd =
+WriteCmd =
   | Str str
   | Indent i32
   | Outdent i32
@@ -78,9 +78,43 @@ parseWriteCmd = (
     | Token.LBrace -> (
         cmds = Vec[WriteCmd]
         loop (
-          if ctx.peek := Token.RBrace (break)
+          # standalone match arm expr is similar to if let
+          match ctx.peek | Token.RBrace -> (break)
           cmds.push(parseWriteCmd[ctx]?)
         )
+        ctx.next # pass over the peeked RBrace
+        WriteCmd.Seq cmds
       )
     | _ -> (? "unexpected token ${debug(_)}") # unary propagate error?, # who is supposed to deallocate this string if its constructed here?
+)
+
+lex: (Str?Token)[ParseCtx]
+lex = (
+  match ctx.remaining.at[0]
+    | None -> Token.Eof
+    | Some(c) match c
+      | '{' -> (Token.LBrace)
+      | '}' -> (Token.RBrace)
+      | '>' -> (
+          i = parseInt[ctx.remaining.from[1]]
+          Token.Indent i
+        )
+      | '<' -> (
+          i = parseInt[ctx.remaining.from[1]]
+          Token.Outdent i
+        )
+      | '=' -> (Token.Eq)
+      | 'n' -> (
+          if ctx.remaining.startsWith["node"] (
+            Token.KwNode
+          ) else (
+            # maybe throw instead of return err?
+            throw ""
+          )
+        )
+      | '"' -> (
+          str = parseString[ctx.remaining]
+          Token.Str str
+        )
+      | _ -> (throw "unknown token")
 )

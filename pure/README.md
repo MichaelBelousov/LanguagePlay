@@ -42,6 +42,36 @@ f: (i32)[i32, f32]{x: f32, y: f32} // returns int, takes two unnamed arguments, 
 )
 ```
 
+```rust
+# the issue with the closure syntax:
+# what type is being passed to this function?
+f[(4)]
+# is the argument a closure or a value?
+# I suppose, once it is fully bound without arguments, it is implicitly evaluable, which makes it work
+# but what about nested closures, what does $1 reference?
+f[($1 * ($2 + $3)]
+# sure, the `*` operator may not make much sense against a closure, but let's find an example that does...
+# this takes a closure argument and applies two other arguments to it
+($1[$2, $3])
+#looks like you have to alias to use nested args, like aliasing `this` when nesting methods in javascript
+createAddMapper = (
+  add = $1: int
+  ($1 + add)
+)
+```
+
+### problems with closure binding
+
+```rust
+# so does the input variable propagate to the outer closure?
+# does this cause ambiguities at all?
+f = (2 * ($1 + 3))
+# if the outer closure has a collision with the inner closure, that may be an ambiguity
+f = ($1 * ($1 + 2)) # ambiguous, does the inner closure imply the need of a second argument
+f = ($1 * ($1 + 2)[$1]) # explicitly bind $1 from the outer closure to the inner closure
+# where is the scope of a closure parameter determined? At the furthest name/binding?
+```
+
 ## tuples
 
 ```rust
@@ -90,24 +120,6 @@ assert arr.size[] == 10
 # it's a value. Should check how this integrated with tagged unions/enums, i.e. variant type but still multiple values can exist
 
 # so then after this, how are effects handled? e.g. async/await and monadic early return?
-```
-
-```rust
-# the issue with the closure syntax:
-# what type is being passed to this function?
-f[(4)]
-# is the argument a closure or a value?
-# I suppose, once it is fully bound without arguments, it is implicitly evaluable, which makes it work
-# but what about nested closures, what does $1 reference?
-f[($1 * ($2 + $3)]
-# sure, the `*` operator may not make much sense against a closure, but let's find an example that does...
-# this takes a closure argument and applies two other arguments to it
-($1[$2, $3])
-#looks like you have to alias to use nested args, like aliasing `this` when nesting methods in javascript
-createAddMapper = (
-  add = $1: int
-  ($1 + add)
-)
 ```
 
 ## coroutines
