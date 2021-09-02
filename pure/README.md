@@ -1,6 +1,8 @@
 
 # thoughts on another language after reading some zig and reflections on rust
 
+## NOTE, THIS IS ALL SUBJECT TO CHANGE, SEE ITERATION2.md
+
 Basically I want to use a fully variant-based type system with compile-time values for constant folding built into the language
 similarly to comptime in zig, but using "widened" and "narrowed" types
 
@@ -9,8 +11,38 @@ similarly to comptime in zig, but using "widened" and "narrowed" types
 ```rust
 # struct literal
 {
-  member: ^int,
-  size: (5) # closure returning 5
+  member = "hello",
+  size = (5) # closure returning 5
+}
+
+# struct type literal
+{
+  member: Str,
+  size: (int)[] # closure returning 5
+}
+```
+
+one way of merging tuple+struct syntax as record syntax, is making "name declarations" separate from assignment operations
+
+for instance, a struct property declaration could use the following `#` syntax
+
+```rust
+{ #member = 5; #fn = (member) }
+```
+
+then you can tell apart unnamed struct fields:
+
+```rust
+{ 5u32, 0.5, #named = 20, annoying_unnamed = "hello" }
+```
+
+- another option is separating declaration and initialization (annoyingly non-terse)
+- another option is separating assignment operation syntax from declaration... this is ideal but deviates from C-family further
+
+```rust
+{
+  #prop1 = "hello"
+  #hello = 5
 }
 ```
 
