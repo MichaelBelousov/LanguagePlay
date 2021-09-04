@@ -23,7 +23,7 @@ typed_args_closure = {
 ## function application
 
 ```rust
-{ "%$name + %{$body}" }[#name=5, #body=2]
+{ "%$name + %{$body}" }[.name=5, .body=2]
 [1,2,3]:Array[i32].map[{$1 * 2}]
 ```
 
@@ -43,9 +43,9 @@ createAdder = {
 // anonymous fields
 [1, 5.0f32, "hello"]
 // named fields
-[ #a = 5, #b = 5 ]
+[ .a = 5, .b = 5 ]
 // mixed
-[1, #field = 5.0f32, "hello"]
+[1, .field = 5.0f32, "hello"]
 ```
 
 ## function types
@@ -56,13 +56,13 @@ createAdder = {
 vec: {
   // maybe whatever type logic we want (i.e. for params or generics) can happen in the closure body, so long as it returns the type literal?
   [
-  #item_type = Type,
-  #buf = *item_type,
-  #size = {u32}, // method returning u32
-  #push = {}[item_type], // method taking an item_type and returning nothing
+  .item_type = Type,
+  .buf = *item_type,
+  .size = {u32}, // method returning u32
+  .push = {}[item_type], // method taking an item_type and returning nothing
 ]}[
-  #item_type = item_type,
-  #alloc = Allocator,
+  .item_type = item_type,
+  .alloc = Allocator,
 ]
 
 // NOTE:, if possible, unary `:` would make a good type widening operator
@@ -75,13 +75,12 @@ vec = {
   capacity = $starting_capacity or 5
   // maybe: $?starting_capacity, which automatically becomes a "Some" type and there is an idiom for unwrapping the value with a default (e.g. `or` or `??`)
   [
-    #item_type,
-    #buf: alloc[sizeof[item_type] * 5],
-    #_size: 0u32,
+    .item_type,
+    .buf: alloc[sizeof[item_type] * 5],
+    ._size: 0u32,
     size: {_size}
   ]
 }
-// there are so many `#`, it would be much prettier methinks if I separated the assignment operation without a prefix to record keys
 ```
 
 ## tagged unions and pattern matching
@@ -104,6 +103,6 @@ my_closure = {
     | [a,b,c] -> {}
     | [a,b,..] -> {}
     | [a,b,..] -> {}
-    | [#h,..] -> {}
+    | [.h,..] -> {}
 }
 ```
